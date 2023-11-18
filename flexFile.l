@@ -16,8 +16,11 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 "+"			{return '+';}
 "-"			{return '-';}
 "*"			{return '*';}
+"show" 	{return show;}
 "/"			{return '/';}
 "purno" 	{return purno;}
+"shuru" 	{return shuru;}
+"sesh" 	{return sesh;}
 "vogno" 	{return vogno;}
 "eval"		{return eval;}
 "%"			{return mod;}

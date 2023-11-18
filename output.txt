@@ -1,0 +1,19 @@
+This is a comment
+Included: myHeader.h
+This is a comment
+-------------Program started--------------This is a comment
+Created: a => purno
+Created: b: 45 => purno
+Created: c => purno
+Mismatch: m => purno , value 76.600000: vogno
+Created: d: 65.400000 => vogno
+Assign: 34.000000 => variable d
+Assign: 110.700000 => variable d
+Not Exist: Variable p
+Evaluated result is : 6695268.000000
+-------------Program Ended--------------
+Symbol Table:
+Name: a,Type: purno,Value: 0
+Name: b,Type: purno,Value: 45
+Name: c,Type: purno,Value: 0
+Name: d,Type: vogno,Value: 110.700000

@@ -1,7 +1,22 @@
+#
+	author: Abdullah
+	Roll:1907030
+#
 addHeader  "myHeader.h"
-#	author: Abdullah
+#
+	author: Abdullah
+	Roll:1907030
+#
+shuru
+#
+	author: Abdullah
 	Roll:1907030
 #
 
-purno a,b=45,c;
-eval b+65;
+purno a,b=45,c,m=76.6;
+vogno d = 65.4;
+d=34.0;
+d = b+65.7;
+show p;
+eval 876*7643-678%3;
+sesh

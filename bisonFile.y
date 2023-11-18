@@ -28,8 +28,7 @@ void add(char* name,char* type,int a,double b) {
     symbolTable[symbolCount++] = entry;
 }
 
-void update(int i,int a,double b){
-    
+void update(int i,int a,double b){    
         symbolTable[i].intValue = a;
         symbolTable[i].doubleValue = b;
 }
@@ -71,7 +70,7 @@ int isPurno = 0;
     double numd;
 }
 
-%token headerStart comment purno EOL vogno eval mod
+%token headerStart comment purno EOL vogno eval mod show shuru sesh
 %token <txt> headerName
 %type <txt> header
 %token <txt> varName
@@ -85,22 +84,48 @@ int isPurno = 0;
 
 %%
 input:headers program
+    | cmnt input
+
+cmnt: comment {printf("This is a comment\n");}
 
 headers: header headers
         | header 
+        | header cmnt
 
 header: headerStart headerName {{printf("Included: %s\n",$2);}}
 
 program:
-        | statements
+        |start statements end
+
+start : shuru {printf("-------------Program started--------------");}
+end : sesh {printf("-------------Program Ended--------------");}
+
 
 statements : statement statements
         | statement
 
-statement: comment {printf("This is a comment\n");}
+statement: cmnt
         | multiVariable
         | variableValueAssign
         | eval expr EOL {printf("Evaluated result is : %f\n",$2);}
+        | show value EOL 
+
+value: varName {
+    int i = find($1);
+            if(i!=-1){
+                if(!strcmp(symbolTable[i].type, "purno")){    
+                    printf("%d\n",symbolTable[i].intValue);
+                }
+                else{
+                    printf("%f\n",symbolTable[i].doubleValue);
+                }
+            
+            }
+
+            else{
+                printf("Not Exist: Variable %s\n",$1);
+            }
+}
         
 expr: val {$$ = $1;}
     | expr '+' expr {$$ = $1 + $3;}
