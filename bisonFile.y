@@ -107,7 +107,8 @@ end : sesh {printf("-------------Program Ended--------------\n");}
 statements : statement statements
         | statement
 
-statement: cmnt
+statement:
+        | cmnt
         | multiVariable
         | variableValueAssign
         | eval expr EOL {printf("Evaluated result is : %f\n",$2);}
