@@ -2,9 +2,6 @@ addHeader  "myHeader.h"
 #	author: Abdullah
 	Roll:1907030
 #
-purno a=45;
-vogno b = 5.7;
-b = a+b-2;
-a = b-6;
 
-eval 2*76-6;
+purno a,b=45,c;
+eval b+65;

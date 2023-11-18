@@ -71,7 +71,7 @@ int isPurno = 0;
     double numd;
 }
 
-%token headerStart comment purno EOL vogno eval
+%token headerStart comment purno EOL vogno eval mod
 %token <txt> headerName
 %type <txt> header
 %token <txt> varName
@@ -81,6 +81,7 @@ int isPurno = 0;
 %type <numd> val
 %left '+' '-'
 %left '/' '*'
+%left mod
 
 %%
 input:headers program
@@ -106,6 +107,12 @@ expr: val {$$ = $1;}
     | expr '-' expr {$$ = $1 - $3;}
     | expr '*' expr {$$ = $1 * $3;}
     | expr '/' expr {$$ = $1 / $3;}
+    | expr mod expr {
+        int val1 = (int)$1;
+        int val2 = (int)$3;
+        float val3 = (val1%val2)*1.0;
+        $$ = val3;
+    }
 
 val: number {$$ = $1*1.0;}
     | numberd {$$ = $1;}

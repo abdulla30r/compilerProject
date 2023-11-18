@@ -20,6 +20,7 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 "purno" 	{return purno;}
 "vogno" 	{return vogno;}
 "eval"		{return eval;}
+"%"			{return mod;}
 
 [a-zA-Z_][a-zA-Z0-9_]* { yylval.txt = strdup(yytext); return varName; }
 [0-9]+ {yylval.num = atoi(yytext);return number;}
