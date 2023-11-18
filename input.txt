@@ -1,9 +1,10 @@
 addHeader  "myHeader.h"
 shuru
-	if(a==4){
-		a=4;
+	purno a=1;
+	loop(a<5;inc 1){
+				
 	}
-	else{
-
-	}
+	vogno b=45.0;
+	show a;
+	show b;
 sesh

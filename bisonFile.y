@@ -72,6 +72,7 @@ int isPurno = 0;
 
 %token headerStart comment purno EOL vogno eval mod show shuru sesh IF ELSE
 %token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual
+%token LOOP INC DEC
 %token <txt> headerName
 %type <txt> header
 %token <txt> varName
@@ -80,6 +81,8 @@ int isPurno = 0;
 %type <numd> expr
 %type <numd> val
 %type <txt> condition
+%type <txt> changer
+%type <txt> loopOP
 %left '+' '-'
 %left '/' '*'
 %left mod
@@ -116,6 +119,56 @@ statement:
                 ifcount++;
                 printf("Finished: %d.IF-ELSE - %s \n",ifcount,$3);
         }
+        | LOOP '(' varName loopOP expr EOL changer expr ')' '{' statements '}'  {
+                                int i = find($3);
+                                int x;
+                                int incSize;
+                                int y = (int)$5;
+                                if(!strcmp($7,"dec")){
+                                    incSize = -1 * (int)$8;
+                                }
+                                else{
+                                    incSize = (int)$8;
+                                }
+                                if(i!=-1){
+                                    if(!strcmp(symbolTable[i].type, "purno")){    
+                                        x = symbolTable[i].intValue;
+                                    }
+                                    else{
+                                        x =(int) symbolTable[i].doubleValue;
+                                    }
+
+                                    if(!strcmp($4,"<=")){
+                                        for(int m = x;m<=y;m+=incSize){
+                                            printf("Loop executed for %d\n",m);
+                                        }
+                                    }
+                                    if(!strcmp($4,">=")){
+                                        for(int m = x;m>=y;m+=incSize){
+                                            printf("Loop executed for %d\n",m);
+                                        }
+                                    }
+                                    if(!strcmp($4,">")){
+                                        for(int m = x;m>y;m+=incSize){
+                                            printf("Loop executed for %d\n",m);
+                                        }
+                                    }
+                                    if(!strcmp($4,"<")){
+                                        for(int m = x;m<y;m+=incSize){
+                                            printf("Loop executed for %d\n",m);
+                                        }
+                                    }
+                                }
+                            }
+
+        changer: INC {$$ = "inc";}
+                |DEC {$$ = "dec";}
+
+        loopOP: isLarge {$$ = ">";}
+            | isLargeEqual {$$ = ">=";}
+            | isSmaller {$$ = "<";}
+            | isSmallerEqual {$$ = "<=";}
+
 
 ifshuru: IF {printf("Started: IF BLOCK\n");}
 condition : expr isEqual expr {
@@ -173,10 +226,10 @@ value: varName {
     int i = find($1);
             if(i!=-1){
                 if(!strcmp(symbolTable[i].type, "purno")){    
-                    printf("%d\n",symbolTable[i].intValue);
+                    printf("SHOW: %s => %d\n",$1,symbolTable[i].intValue);
                 }
                 else{
-                    printf("%f\n",symbolTable[i].doubleValue);
+                    printf("SHOW: %s =>%f\n",$1,symbolTable[i].doubleValue);
                 }
             
             }

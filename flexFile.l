@@ -13,6 +13,8 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
+"inc"		{return INC;}
+"dec"		{return DEC;}
 "=="		{return isEqual;}
 ">="		{return isLargeEqual;}
 ">"			{return isLarge;}
@@ -30,6 +32,7 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 ";" 		{return EOL;}
 "=" 		{return '=';}
 ","			{return ',';}
+"loop"		{return LOOP;}
 "if"		{return IF;}
 "else"		{return ELSE;}
 "show" 		{return show;}
