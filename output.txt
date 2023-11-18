@@ -1,0 +1,11 @@
+Included: myHeader.h
+This is a comment
+Created: a: 45 => purno
+Created: b: 5.700000 => vogno
+Assign: 48.700000 => variable b
+Assign: 42 => variable a
+Evaluated result is : 146.000000
+
+Symbol Table:
+Name: a,Type: purno,Value: 42
+Name: b,Type: vogno,Value: 48.700000

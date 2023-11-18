@@ -3,7 +3,7 @@
 %}
 
 sp [!@$%^&*()-_=+{}\[\]:;<>,.?\/\\|]
-anything ([a-zA-Z0-9]|(\n)|{sp}|[ ])*
+anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 
 %%
 "addHeader"	{return headerStart;}
@@ -13,8 +13,13 @@ anything ([a-zA-Z0-9]|(\n)|{sp}|[ ])*
 	return headerName;
 }
 
+"+"			{return '+';}
+"-"			{return '-';}
+"*"			{return '*';}
+"/"			{return '/';}
 "purno" 	{return purno;}
 "vogno" 	{return vogno;}
+"eval"		{return eval;}
 
 [a-zA-Z_][a-zA-Z0-9_]* { yylval.txt = strdup(yytext); return varName; }
 [0-9]+ {yylval.num = atoi(yytext);return number;}
