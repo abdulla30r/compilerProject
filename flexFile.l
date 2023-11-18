@@ -13,14 +13,29 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
+"=="		{return isEqual;}
+">="		{return isLargeEqual;}
+">"			{return isLarge;}
+"<="		{return isSmallerEqual;}
+"<"			{return isSmaller;}
+"!="		{return isNotEqual;}
+"if"		{return IF;}
+"else"		{return ELSE;}
+"("         {return '(';}
+")"         {return ')';}
+"{"         {return '{';}
+"}"         {return '}';}
 "+"			{return '+';}
 "-"			{return '-';}
-"*"			{return '*';}
-"show" 	{return show;}
 "/"			{return '/';}
+"*"			{return '*';}
+";" 		{return EOL;}
+"=" 		{return '=';}
+","			{return ',';}
+"show" 		{return show;}
 "purno" 	{return purno;}
 "shuru" 	{return shuru;}
-"sesh" 	{return sesh;}
+"sesh" 		{return sesh;}
 "vogno" 	{return vogno;}
 "eval"		{return eval;}
 "%"			{return mod;}
@@ -31,9 +46,7 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 
 
 (#){anything}(#)	{return comment;}
-(;) {return EOL;}
-(=) {return '=';}
-(,) {return ',';}
+
 (\n)	{}
 [ ]	{}
 [\t] {}

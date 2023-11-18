@@ -18,6 +18,7 @@ typedef struct {
 
 SymbolEntry symbolTable[MAX_SYMBOLS];
 int symbolCount = 0;
+int ifcount = 0;
 
 void add(char* name,char* type,int a,double b) {
     SymbolEntry entry;
@@ -70,7 +71,8 @@ int isPurno = 0;
     double numd;
 }
 
-%token headerStart comment purno EOL vogno eval mod show shuru sesh
+%token headerStart comment purno EOL vogno eval mod show shuru sesh IF ELSE
+%token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual
 %token <txt> headerName
 %type <txt> header
 %token <txt> varName
@@ -78,6 +80,7 @@ int isPurno = 0;
 %token <numd> numberd
 %type <numd> expr
 %type <numd> val
+%type <txt> condition
 %left '+' '-'
 %left '/' '*'
 %left mod
@@ -97,8 +100,8 @@ header: headerStart headerName {{printf("Included: %s\n",$2);}}
 program:
         |start statements end
 
-start : shuru {printf("-------------Program started--------------");}
-end : sesh {printf("-------------Program Ended--------------");}
+start : shuru {printf("-------------Program started--------------\n");}
+end : sesh {printf("-------------Program Ended--------------\n");}
 
 
 statements : statement statements
@@ -108,7 +111,61 @@ statement: cmnt
         | multiVariable
         | variableValueAssign
         | eval expr EOL {printf("Evaluated result is : %f\n",$2);}
-        | show value EOL 
+        | show value EOL
+        | ifshuru '(' condition ')' '{' statements '}' ELSE '{' statements '}' {
+                ifcount++;
+                printf("Finished: %d.IF-ELSE - %s \n",ifcount,$3);
+        }
+
+ifshuru: IF {printf("Started: IF BLOCK\n");}
+condition : expr isEqual expr {
+        if($1 == $3){
+            $$ = "true";  
+        }
+        else{
+            $$ = "false";
+        }
+    }
+    | expr isLarge expr {
+        if($1 > $3){
+            $$ = "true";  
+        }
+        else{
+            $$ = "false";
+        }
+    }
+    | expr isLargeEqual expr {
+        if($1 >= $3){
+            $$ = "true";  
+        }
+        else{
+            $$ = "false";
+        }
+    }
+    | expr isSmaller expr {
+        if($1 < $3){
+            $$ = "true";  
+        }
+        else{
+            $$ = "false";
+        }
+    }
+    | expr isSmallerEqual expr {
+        if($1 > $3){
+            $$ = "true";  
+        }
+        else{
+            $$ = "false";
+        }
+    }
+    | expr isNotEqual expr {
+        if($1 != $3){
+            $$ = "true";  
+        }
+        else{
+            $$ = "false";
+        }
+    }
 
 value: varName {
     int i = find($1);
