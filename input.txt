@@ -1,0 +1,3 @@
+addHeader  "myHeader.h"
+purno a=45;
+a=70;

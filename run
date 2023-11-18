@@ -1,0 +1,4 @@
+bison -d bisonFile.y
+lex flexFile.l
+gcc bisonFile.tab.c lex.yy.c
+./a.out
