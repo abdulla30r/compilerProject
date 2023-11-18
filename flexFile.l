@@ -19,8 +19,6 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 "<="		{return isSmallerEqual;}
 "<"			{return isSmaller;}
 "!="		{return isNotEqual;}
-"if"		{return IF;}
-"else"		{return ELSE;}
 "("         {return '(';}
 ")"         {return ')';}
 "{"         {return '{';}
@@ -32,6 +30,8 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 ";" 		{return EOL;}
 "=" 		{return '=';}
 ","			{return ',';}
+"if"		{return IF;}
+"else"		{return ELSE;}
 "show" 		{return show;}
 "purno" 	{return purno;}
 "shuru" 	{return shuru;}

@@ -1,0 +1,9 @@
+Included: myHeader.h
+-------------Program started--------------
+Started: IF BLOCK
+Not Declared: Variable a
+Not Declared : variable a
+Finished: 1.IF-ELSE - false 
+-------------Program Ended--------------
+
+Symbol Table:

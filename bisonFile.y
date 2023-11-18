@@ -64,7 +64,6 @@ void printSymbolTable() {
 int isPurno = 0;
 
 %}
-
 %union {
     int num;
     char* txt;
@@ -152,7 +151,7 @@ condition : expr isEqual expr {
         }
     }
     | expr isSmallerEqual expr {
-        if($1 > $3){
+        if($1 <= $3){
             $$ = "true";  
         }
         else{
@@ -167,6 +166,8 @@ condition : expr isEqual expr {
             $$ = "false";
         }
     }
+
+
 
 value: varName {
     int i = find($1);
@@ -209,6 +210,9 @@ val: number {$$ = $1*1.0;}
                     $$ = symbolTable[i].doubleValue;
                 }
             
+            }
+            else{
+                printf("Not Declared: Variable %s\n",$1);
             }
         }
 

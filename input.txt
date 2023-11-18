@@ -1,3 +1,9 @@
 addHeader  "myHeader.h"
 shuru
+	if(a==4){
+		a=4;
+	}
+	else{
+
+	}
 sesh

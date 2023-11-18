@@ -1,0 +1,1169 @@
+State 12 conflicts: 7 shift/reduce
+State 23 conflicts: 7 shift/reduce, 2 reduce/reduce
+State 50 conflicts: 1 shift/reduce
+State 51 conflicts: 1 shift/reduce
+State 76 conflicts: 7 shift/reduce
+State 86 conflicts: 7 shift/reduce
+
+
+Grammar
+
+    0 $accept: input $end
+
+    1 input: headers program
+    2      | cmnt input
+
+    3 cmnt: comment
+
+    4 headers: header headers
+    5        | header
+    6        | header cmnt
+
+    7 header: headerStart headerName
+
+    8 program: ε
+    9        | start statements end
+
+   10 start: shuru
+
+   11 end: sesh
+
+   12 statements: statement statements
+   13           | statement
+
+   14 statement: ε
+   15          | cmnt
+   16          | multiVariable
+   17          | variableValueAssign
+   18          | eval expr EOL
+   19          | show value EOL
+   20          | ifshuru '(' condition ')' '{' statements '}' ELSE '{' statements '}'
+
+   21 ifshuru: IF
+
+   22 condition: expr isEqual expr
+   23          | expr isLarge expr
+   24          | expr isLargeEqual expr
+   25          | expr isSmaller expr
+   26          | expr isSmallerEqual expr
+   27          | expr isNotEqual expr
+
+   28 value: varName
+
+   29 expr: val
+   30     | expr '+' expr
+   31     | expr '-' expr
+   32     | expr '*' expr
+   33     | expr '/' expr
+   34     | expr mod expr
+
+   35 val: number
+   36    | numberd
+   37    | varName
+
+   38 multiVariable: dataType varNames
+
+   39 dataType: purno
+   40         | vogno
+
+   41 varNames: oneVar ',' varNames
+   42         | oneVar EOL
+
+   43 oneVar: varName
+   44       | varName '=' number
+   45       | varName '=' numberd
+
+   46 variableValueAssign: varName '=' number EOL
+   47                    | varName '=' numberd EOL
+   48                    | varName '=' expr EOL
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' (40) 20
+    ')' (41) 20
+    '*' (42) 32
+    '+' (43) 30
+    ',' (44) 41
+    '-' (45) 31
+    '/' (47) 33
+    '=' (61) 44 45 46 47 48
+    '{' (123) 20
+    '}' (125) 20
+    error (256)
+    headerStart (258) 7
+    comment (259) 3
+    purno (260) 39
+    EOL (261) 18 19 42 46 47 48
+    vogno (262) 40
+    eval (263) 18
+    mod (264) 34
+    show (265) 19
+    shuru (266) 10
+    sesh (267) 11
+    IF (268) 21
+    ELSE (269) 20
+    isEqual (270) 22
+    isLarge (271) 23
+    isLargeEqual (272) 24
+    isSmaller (273) 25
+    isSmallerEqual (274) 26
+    isNotEqual (275) 27
+    headerName <txt> (276) 7
+    varName <txt> (277) 28 37 43 44 45 46 47 48
+    number <num> (278) 35 44 46
+    numberd <numd> (279) 36 45 47
+
+
+Nonterminals, with rules where they appear
+
+    $accept (35)
+        on left: 0
+    input (36)
+        on left: 1 2
+        on right: 0 2
+    cmnt (37)
+        on left: 3
+        on right: 2 6 15
+    headers (38)
+        on left: 4 5 6
+        on right: 1 4
+    header <txt> (39)
+        on left: 7
+        on right: 4 5 6
+    program (40)
+        on left: 8 9
+        on right: 1
+    start (41)
+        on left: 10
+        on right: 9
+    end (42)
+        on left: 11
+        on right: 9
+    statements (43)
+        on left: 12 13
+        on right: 9 12 20
+    statement (44)
+        on left: 14 15 16 17 18 19 20
+        on right: 12 13
+    ifshuru (45)
+        on left: 21
+        on right: 20
+    condition <txt> (46)
+        on left: 22 23 24 25 26 27
+        on right: 20
+    value (47)
+        on left: 28
+        on right: 19
+    expr <numd> (48)
+        on left: 29 30 31 32 33 34
+        on right: 18 22 23 24 25 26 27 30 31 32 33 34 48
+    val <numd> (49)
+        on left: 35 36 37
+        on right: 29
+    multiVariable (50)
+        on left: 38
+        on right: 16
+    dataType (51)
+        on left: 39 40
+        on right: 38
+    varNames (52)
+        on left: 41 42
+        on right: 38 41
+    oneVar (53)
+        on left: 43 44 45
+        on right: 41 42
+    variableValueAssign (54)
+        on left: 46 47 48
+        on right: 17
+
+
+State 0
+
+    0 $accept: • input $end
+
+    headerStart  shift, and go to state 1
+    comment      shift, and go to state 2
+
+    input    go to state 3
+    cmnt     go to state 4
+    headers  go to state 5
+    header   go to state 6
+
+
+State 1
+
+    7 header: headerStart • headerName
+
+    headerName  shift, and go to state 7
+
+
+State 2
+
+    3 cmnt: comment •
+
+    $default  reduce using rule 3 (cmnt)
+
+
+State 3
+
+    0 $accept: input • $end
+
+    $end  shift, and go to state 8
+
+
+State 4
+
+    2 input: cmnt • input
+
+    headerStart  shift, and go to state 1
+    comment      shift, and go to state 2
+
+    input    go to state 9
+    cmnt     go to state 4
+    headers  go to state 5
+    header   go to state 6
+
+
+State 5
+
+    1 input: headers • program
+
+    shuru  shift, and go to state 10
+
+    $default  reduce using rule 8 (program)
+
+    program  go to state 11
+    start    go to state 12
+
+
+State 6
+
+    4 headers: header • headers
+    5        | header •
+    6        | header • cmnt
+
+    headerStart  shift, and go to state 1
+    comment      shift, and go to state 2
+
+    $default  reduce using rule 5 (headers)
+
+    cmnt     go to state 13
+    headers  go to state 14
+    header   go to state 6
+
+
+State 7
+
+    7 header: headerStart headerName •
+
+    $default  reduce using rule 7 (header)
+
+
+State 8
+
+    0 $accept: input $end •
+
+    $default  accept
+
+
+State 9
+
+    2 input: cmnt input •
+
+    $default  reduce using rule 2 (input)
+
+
+State 10
+
+   10 start: shuru •
+
+    $default  reduce using rule 10 (start)
+
+
+State 11
+
+    1 input: headers program •
+
+    $default  reduce using rule 1 (input)
+
+
+State 12
+
+    9 program: start • statements end
+
+    comment  shift, and go to state 2
+    purno    shift, and go to state 15
+    vogno    shift, and go to state 16
+    eval     shift, and go to state 17
+    show     shift, and go to state 18
+    IF       shift, and go to state 19
+    varName  shift, and go to state 20
+
+    comment   [reduce using rule 14 (statement)]
+    purno     [reduce using rule 14 (statement)]
+    vogno     [reduce using rule 14 (statement)]
+    eval      [reduce using rule 14 (statement)]
+    show      [reduce using rule 14 (statement)]
+    IF        [reduce using rule 14 (statement)]
+    varName   [reduce using rule 14 (statement)]
+    $default  reduce using rule 14 (statement)
+
+    cmnt                 go to state 21
+    statements           go to state 22
+    statement            go to state 23
+    ifshuru              go to state 24
+    multiVariable        go to state 25
+    dataType             go to state 26
+    variableValueAssign  go to state 27
+
+
+State 13
+
+    6 headers: header cmnt •
+
+    $default  reduce using rule 6 (headers)
+
+
+State 14
+
+    4 headers: header headers •
+
+    $default  reduce using rule 4 (headers)
+
+
+State 15
+
+   39 dataType: purno •
+
+    $default  reduce using rule 39 (dataType)
+
+
+State 16
+
+   40 dataType: vogno •
+
+    $default  reduce using rule 40 (dataType)
+
+
+State 17
+
+   18 statement: eval • expr EOL
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 31
+    val   go to state 32
+
+
+State 18
+
+   19 statement: show • value EOL
+
+    varName  shift, and go to state 33
+
+    value  go to state 34
+
+
+State 19
+
+   21 ifshuru: IF •
+
+    $default  reduce using rule 21 (ifshuru)
+
+
+State 20
+
+   46 variableValueAssign: varName • '=' number EOL
+   47                    | varName • '=' numberd EOL
+   48                    | varName • '=' expr EOL
+
+    '='  shift, and go to state 35
+
+
+State 21
+
+   15 statement: cmnt •
+
+    $default  reduce using rule 15 (statement)
+
+
+State 22
+
+    9 program: start statements • end
+
+    sesh  shift, and go to state 36
+
+    end  go to state 37
+
+
+State 23
+
+   12 statements: statement • statements
+   13           | statement •
+
+    comment  shift, and go to state 2
+    purno    shift, and go to state 15
+    vogno    shift, and go to state 16
+    eval     shift, and go to state 17
+    show     shift, and go to state 18
+    IF       shift, and go to state 19
+    varName  shift, and go to state 20
+
+    comment   [reduce using rule 14 (statement)]
+    purno     [reduce using rule 14 (statement)]
+    vogno     [reduce using rule 14 (statement)]
+    eval      [reduce using rule 14 (statement)]
+    show      [reduce using rule 14 (statement)]
+    sesh      reduce using rule 13 (statements)
+    sesh      [reduce using rule 14 (statement)]
+    IF        [reduce using rule 14 (statement)]
+    varName   [reduce using rule 14 (statement)]
+    '}'       reduce using rule 13 (statements)
+    '}'       [reduce using rule 14 (statement)]
+    $default  reduce using rule 13 (statements)
+
+    cmnt                 go to state 21
+    statements           go to state 38
+    statement            go to state 23
+    ifshuru              go to state 24
+    multiVariable        go to state 25
+    dataType             go to state 26
+    variableValueAssign  go to state 27
+
+
+State 24
+
+   20 statement: ifshuru • '(' condition ')' '{' statements '}' ELSE '{' statements '}'
+
+    '('  shift, and go to state 39
+
+
+State 25
+
+   16 statement: multiVariable •
+
+    $default  reduce using rule 16 (statement)
+
+
+State 26
+
+   38 multiVariable: dataType • varNames
+
+    varName  shift, and go to state 40
+
+    varNames  go to state 41
+    oneVar    go to state 42
+
+
+State 27
+
+   17 statement: variableValueAssign •
+
+    $default  reduce using rule 17 (statement)
+
+
+State 28
+
+   37 val: varName •
+
+    $default  reduce using rule 37 (val)
+
+
+State 29
+
+   35 val: number •
+
+    $default  reduce using rule 35 (val)
+
+
+State 30
+
+   36 val: numberd •
+
+    $default  reduce using rule 36 (val)
+
+
+State 31
+
+   18 statement: eval expr • EOL
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    EOL  shift, and go to state 43
+    mod  shift, and go to state 44
+    '+'  shift, and go to state 45
+    '-'  shift, and go to state 46
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+
+State 32
+
+   29 expr: val •
+
+    $default  reduce using rule 29 (expr)
+
+
+State 33
+
+   28 value: varName •
+
+    $default  reduce using rule 28 (value)
+
+
+State 34
+
+   19 statement: show value • EOL
+
+    EOL  shift, and go to state 49
+
+
+State 35
+
+   46 variableValueAssign: varName '=' • number EOL
+   47                    | varName '=' • numberd EOL
+   48                    | varName '=' • expr EOL
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 50
+    numberd  shift, and go to state 51
+
+    expr  go to state 52
+    val   go to state 32
+
+
+State 36
+
+   11 end: sesh •
+
+    $default  reduce using rule 11 (end)
+
+
+State 37
+
+    9 program: start statements end •
+
+    $default  reduce using rule 9 (program)
+
+
+State 38
+
+   12 statements: statement statements •
+
+    $default  reduce using rule 12 (statements)
+
+
+State 39
+
+   20 statement: ifshuru '(' • condition ')' '{' statements '}' ELSE '{' statements '}'
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    condition  go to state 53
+    expr       go to state 54
+    val        go to state 32
+
+
+State 40
+
+   43 oneVar: varName •
+   44       | varName • '=' number
+   45       | varName • '=' numberd
+
+    '='  shift, and go to state 55
+
+    $default  reduce using rule 43 (oneVar)
+
+
+State 41
+
+   38 multiVariable: dataType varNames •
+
+    $default  reduce using rule 38 (multiVariable)
+
+
+State 42
+
+   41 varNames: oneVar • ',' varNames
+   42         | oneVar • EOL
+
+    EOL  shift, and go to state 56
+    ','  shift, and go to state 57
+
+
+State 43
+
+   18 statement: eval expr EOL •
+
+    $default  reduce using rule 18 (statement)
+
+
+State 44
+
+   34 expr: expr mod • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 58
+    val   go to state 32
+
+
+State 45
+
+   30 expr: expr '+' • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 59
+    val   go to state 32
+
+
+State 46
+
+   31 expr: expr '-' • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 60
+    val   go to state 32
+
+
+State 47
+
+   33 expr: expr '/' • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 61
+    val   go to state 32
+
+
+State 48
+
+   32 expr: expr '*' • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 62
+    val   go to state 32
+
+
+State 49
+
+   19 statement: show value EOL •
+
+    $default  reduce using rule 19 (statement)
+
+
+State 50
+
+   35 val: number •
+   46 variableValueAssign: varName '=' number • EOL
+
+    EOL  shift, and go to state 63
+
+    EOL       [reduce using rule 35 (val)]
+    $default  reduce using rule 35 (val)
+
+
+State 51
+
+   36 val: numberd •
+   47 variableValueAssign: varName '=' numberd • EOL
+
+    EOL  shift, and go to state 64
+
+    EOL       [reduce using rule 36 (val)]
+    $default  reduce using rule 36 (val)
+
+
+State 52
+
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+   48 variableValueAssign: varName '=' expr • EOL
+
+    EOL  shift, and go to state 65
+    mod  shift, and go to state 44
+    '+'  shift, and go to state 45
+    '-'  shift, and go to state 46
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+
+State 53
+
+   20 statement: ifshuru '(' condition • ')' '{' statements '}' ELSE '{' statements '}'
+
+    ')'  shift, and go to state 66
+
+
+State 54
+
+   22 condition: expr • isEqual expr
+   23          | expr • isLarge expr
+   24          | expr • isLargeEqual expr
+   25          | expr • isSmaller expr
+   26          | expr • isSmallerEqual expr
+   27          | expr • isNotEqual expr
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod             shift, and go to state 44
+    isEqual         shift, and go to state 67
+    isLarge         shift, and go to state 68
+    isLargeEqual    shift, and go to state 69
+    isSmaller       shift, and go to state 70
+    isSmallerEqual  shift, and go to state 71
+    isNotEqual      shift, and go to state 72
+    '+'             shift, and go to state 45
+    '-'             shift, and go to state 46
+    '/'             shift, and go to state 47
+    '*'             shift, and go to state 48
+
+
+State 55
+
+   44 oneVar: varName '=' • number
+   45       | varName '=' • numberd
+
+    number   shift, and go to state 73
+    numberd  shift, and go to state 74
+
+
+State 56
+
+   42 varNames: oneVar EOL •
+
+    $default  reduce using rule 42 (varNames)
+
+
+State 57
+
+   41 varNames: oneVar ',' • varNames
+
+    varName  shift, and go to state 40
+
+    varNames  go to state 75
+    oneVar    go to state 42
+
+
+State 58
+
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+   34     | expr mod expr •
+
+    $default  reduce using rule 34 (expr)
+
+
+State 59
+
+   30 expr: expr • '+' expr
+   30     | expr '+' expr •
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+    $default  reduce using rule 30 (expr)
+
+
+State 60
+
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   31     | expr '-' expr •
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+    $default  reduce using rule 31 (expr)
+
+
+State 61
+
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   33     | expr '/' expr •
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+
+    $default  reduce using rule 33 (expr)
+
+
+State 62
+
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   32     | expr '*' expr •
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+
+    $default  reduce using rule 32 (expr)
+
+
+State 63
+
+   46 variableValueAssign: varName '=' number EOL •
+
+    $default  reduce using rule 46 (variableValueAssign)
+
+
+State 64
+
+   47 variableValueAssign: varName '=' numberd EOL •
+
+    $default  reduce using rule 47 (variableValueAssign)
+
+
+State 65
+
+   48 variableValueAssign: varName '=' expr EOL •
+
+    $default  reduce using rule 48 (variableValueAssign)
+
+
+State 66
+
+   20 statement: ifshuru '(' condition ')' • '{' statements '}' ELSE '{' statements '}'
+
+    '{'  shift, and go to state 76
+
+
+State 67
+
+   22 condition: expr isEqual • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 77
+    val   go to state 32
+
+
+State 68
+
+   23 condition: expr isLarge • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 78
+    val   go to state 32
+
+
+State 69
+
+   24 condition: expr isLargeEqual • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 79
+    val   go to state 32
+
+
+State 70
+
+   25 condition: expr isSmaller • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 80
+    val   go to state 32
+
+
+State 71
+
+   26 condition: expr isSmallerEqual • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 81
+    val   go to state 32
+
+
+State 72
+
+   27 condition: expr isNotEqual • expr
+
+    varName  shift, and go to state 28
+    number   shift, and go to state 29
+    numberd  shift, and go to state 30
+
+    expr  go to state 82
+    val   go to state 32
+
+
+State 73
+
+   44 oneVar: varName '=' number •
+
+    $default  reduce using rule 44 (oneVar)
+
+
+State 74
+
+   45 oneVar: varName '=' numberd •
+
+    $default  reduce using rule 45 (oneVar)
+
+
+State 75
+
+   41 varNames: oneVar ',' varNames •
+
+    $default  reduce using rule 41 (varNames)
+
+
+State 76
+
+   20 statement: ifshuru '(' condition ')' '{' • statements '}' ELSE '{' statements '}'
+
+    comment  shift, and go to state 2
+    purno    shift, and go to state 15
+    vogno    shift, and go to state 16
+    eval     shift, and go to state 17
+    show     shift, and go to state 18
+    IF       shift, and go to state 19
+    varName  shift, and go to state 20
+
+    comment   [reduce using rule 14 (statement)]
+    purno     [reduce using rule 14 (statement)]
+    vogno     [reduce using rule 14 (statement)]
+    eval      [reduce using rule 14 (statement)]
+    show      [reduce using rule 14 (statement)]
+    IF        [reduce using rule 14 (statement)]
+    varName   [reduce using rule 14 (statement)]
+    $default  reduce using rule 14 (statement)
+
+    cmnt                 go to state 21
+    statements           go to state 83
+    statement            go to state 23
+    ifshuru              go to state 24
+    multiVariable        go to state 25
+    dataType             go to state 26
+    variableValueAssign  go to state 27
+
+
+State 77
+
+   22 condition: expr isEqual expr •
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+    '+'  shift, and go to state 45
+    '-'  shift, and go to state 46
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+    $default  reduce using rule 22 (condition)
+
+
+State 78
+
+   23 condition: expr isLarge expr •
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+    '+'  shift, and go to state 45
+    '-'  shift, and go to state 46
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+    $default  reduce using rule 23 (condition)
+
+
+State 79
+
+   24 condition: expr isLargeEqual expr •
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+    '+'  shift, and go to state 45
+    '-'  shift, and go to state 46
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+    $default  reduce using rule 24 (condition)
+
+
+State 80
+
+   25 condition: expr isSmaller expr •
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+    '+'  shift, and go to state 45
+    '-'  shift, and go to state 46
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+    $default  reduce using rule 25 (condition)
+
+
+State 81
+
+   26 condition: expr isSmallerEqual expr •
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+    '+'  shift, and go to state 45
+    '-'  shift, and go to state 46
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+    $default  reduce using rule 26 (condition)
+
+
+State 82
+
+   27 condition: expr isNotEqual expr •
+   30 expr: expr • '+' expr
+   31     | expr • '-' expr
+   32     | expr • '*' expr
+   33     | expr • '/' expr
+   34     | expr • mod expr
+
+    mod  shift, and go to state 44
+    '+'  shift, and go to state 45
+    '-'  shift, and go to state 46
+    '/'  shift, and go to state 47
+    '*'  shift, and go to state 48
+
+    $default  reduce using rule 27 (condition)
+
+
+State 83
+
+   20 statement: ifshuru '(' condition ')' '{' statements • '}' ELSE '{' statements '}'
+
+    '}'  shift, and go to state 84
+
+
+State 84
+
+   20 statement: ifshuru '(' condition ')' '{' statements '}' • ELSE '{' statements '}'
+
+    ELSE  shift, and go to state 85
+
+
+State 85
+
+   20 statement: ifshuru '(' condition ')' '{' statements '}' ELSE • '{' statements '}'
+
+    '{'  shift, and go to state 86
+
+
+State 86
+
+   20 statement: ifshuru '(' condition ')' '{' statements '}' ELSE '{' • statements '}'
+
+    comment  shift, and go to state 2
+    purno    shift, and go to state 15
+    vogno    shift, and go to state 16
+    eval     shift, and go to state 17
+    show     shift, and go to state 18
+    IF       shift, and go to state 19
+    varName  shift, and go to state 20
+
+    comment   [reduce using rule 14 (statement)]
+    purno     [reduce using rule 14 (statement)]
+    vogno     [reduce using rule 14 (statement)]
+    eval      [reduce using rule 14 (statement)]
+    show      [reduce using rule 14 (statement)]
+    IF        [reduce using rule 14 (statement)]
+    varName   [reduce using rule 14 (statement)]
+    $default  reduce using rule 14 (statement)
+
+    cmnt                 go to state 21
+    statements           go to state 87
+    statement            go to state 23
+    ifshuru              go to state 24
+    multiVariable        go to state 25
+    dataType             go to state 26
+    variableValueAssign  go to state 27
+
+
+State 87
+
+   20 statement: ifshuru '(' condition ')' '{' statements '}' ELSE '{' statements • '}'
+
+    '}'  shift, and go to state 88
+
+
+State 88
+
+   20 statement: ifshuru '(' condition ')' '{' statements '}' ELSE '{' statements '}' •
+
+    $default  reduce using rule 20 (statement)
