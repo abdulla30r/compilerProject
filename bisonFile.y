@@ -102,17 +102,14 @@ int isPurno = 0;
 
 %token headerStart comment purno EOL vogno shobdo eval mod show shuru sesh IF ELSE
 %token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual qt
-%token LOOP INC DEC FUNC
-%token <txt> headerName
-%type <txt> header
-%token <txt> varName
+%token LOOP INC DEC FUNC parameters
+%token <txt> headerName varName
 %token <num> number
 %token <numd> numberd
-%type <numd> expr
-%type <numd> val
-%type <txt> condition
-%type <txt> changer
-%type <txt> loopOP
+
+%type <numd> expr val
+%type <txt> changer funcShuru var condition loopOP header dataType
+
 %left '+' '-'
 %left '/' '*'
 %left mod
@@ -122,21 +119,35 @@ input:headers program
     | headers functions program
     | cmnt input
 
-functions: func functions
-        |func
-func: FUNC varName '(' ')' '{'statements'}' {printf("%s Function declared\n",$2);}
+functions: function functions
+        |function
+
+function: funcShuru '(' parameters ')' '=' isLarge '(' dataType var ')' '{'statements'}' {
+                                printf("Return type of %s: %s => varName: %s ", $1,$8,$9);
+                                printf("\n-------------Ended:%s Declaration-------------\n\n",$1);
+                            }
+
+funcShuru: FUNC varName{
+        printf("\n-------------Started: %s Declaration-------------\n\n",$2);
+        $$ = $2;
+    }
+
+var: varName {
+            $$ = $1;   
+        }
+
 cmnt: comment {printf("This is a comment\n");}
 
 headers: header headers
         | header 
         | header cmnt
 
-header: headerStart headerName {{printf("Included: %s\n",$2);}}
+header: headerStart headerName {printf("Included: %s\n",$2);}
 
 program:
         |start statements end
 
-start : shuru {printf("-------------Started: Main--------------\n\n");}
+start : shuru {printf("\n-------------Started: Main--------------\n\n");}
 end : sesh {printf("\n-------------Ended: Main--------------\n");}
 
 
@@ -284,7 +295,7 @@ value: varName {
             }
 
             else{
-                printf("Not Exist: Variable %s\n",$1);
+                printf("line %d => Not Exist: Variable %s\n",yylineno,$1);
             }
 }
         
@@ -303,7 +314,7 @@ expr: val {$$ = $1;}
 val: number {$$ = $1*1.0;}
     | numberd {$$ = $1;}
     | qt varName qt {
-                printf("Not a number: %s => shobdo\n",$2);
+                printf("line %d => Not a number: %s => shobdo\n",yylineno, $2);
                 $$ = 0.0;
             }
     | varName {
@@ -316,28 +327,28 @@ val: number {$$ = $1*1.0;}
                     $$ = symbolTable[i].doubleValue;
                 }
                 else{
-                    printf("Not a number: %s => shobdo \n",$1);
+                    printf("line %d => Not a number: %s => shobdo \n",yylineno, $1);
                     $$ = 0.0;
                 }           
             }
             else{
-                printf("Not Declared: Variable %s\n",$1);
+                printf("line %d => Not Declared: Variable %s\n",yylineno,$1);
             }
         }
 
 
 multiVariable: dataType varNames
 
-dataType : purno {isPurno = 1;}
-        | vogno {isPurno = 0;}
-        | shobdo {isPurno = -1;}
+dataType : purno {isPurno = 1; $$ = "purno";}
+        | vogno {isPurno = 0;$$ = "vogno";}
+        | shobdo {isPurno = -1;$$ = "shobdo";}
 
 varNames: oneVar ',' varNames
         |oneVar EOL
 
 oneVar: varName {
             if (find($1) != -1) {
-                    printf("Already declared: Variable %s \n", $1);
+                    printf("line %d => Already declared: Variable %s \n",yylineno, $1);
             } 
             else{
                 if(isPurno==1){
@@ -353,7 +364,7 @@ oneVar: varName {
 
         | varName '=' number {
                     if (find($1) != -1) {
-                        printf("Already declared: Variable %s \n", $1);
+                        printf("line %d => Already declared: Variable %s \n",yylineno, $1);
                     } 
                     else{
                         if(isPurno==1){
@@ -361,16 +372,16 @@ oneVar: varName {
                             printf("Created: %s: %d => purno\n", $1,$3);
                         }
                         else if(isPurno==0){
-                            printf("Mismatch: %s => vogno , value %d: purno\n",$1, $3);
+                            printf("line %d => Mismatch: %s => vogno , value %d: purno\n",yylineno,$1, $3);
                         }
                         else if(isPurno==-1){
-                            printf("Mismatch: %s => shobdo , value %d: purno\n",$1, $3);
+                            printf("line %d => Mismatch: %s => shobdo , value %d: purno\n",yylineno,$1, $3);
                         }
                     }
                 }
         | varName '=' numberd {
                     if (find($1) != -1) {
-                        printf("Already declared: Variable %s \n", $1);
+                        printf("line %d => Already declared: Variable %s \n",yylineno, $1);
                     } 
                     else{
                         if(isPurno==0){
@@ -378,17 +389,17 @@ oneVar: varName {
                             printf("Created: %s: %f => vogno\n", $1,$3);
                         }
                         else if(isPurno == 1){
-                            printf("Mismatch: %s => purno , value %f: vogno\n",$1,$3);
+                            printf("line %d => Mismatch: %s => purno , value %f: vogno\n",yylineno,$1,$3);
                         }
                         else if(isPurno ==-1) {
-                            printf("Mismatch: %s => shobdo , value %f: vogno\n",$1,$3);
+                            printf("line %d => Mismatch: %s => shobdo , value %f: vogno\n",yylineno,$1,$3);
                         }
                     }
             }
 
         | varName '=' qt varName qt {
                     if (find($1) != -1) {
-                        printf("Already declared: Variable %s \n", $1);
+                        printf("line %d => Already declared: Variable %s \n",yylineno, $1);
                     } 
                     else{
                         if(isPurno==-1){
@@ -396,10 +407,10 @@ oneVar: varName {
                             printf("Created: %s: %s => shobdo\n", $1,$4);
                         }
                         else if (isPurno==1){
-                            printf("Mismatch: %s => purno , value %s: shobdo\n",$1,$4);
+                            printf("line %d => Mismatch: %s => purno , value %s: shobdo\n",yylineno,$1,$4);
                         }
                         else if (isPurno==0){
-                            printf("Mismatch: %s => vogno , value %s: shobdo\n",$1,$4);
+                            printf("line %d => Mismatch: %s => vogno , value %s: shobdo\n",yylineno,$1,$4);
                         }
                     }
         }
@@ -412,11 +423,11 @@ variableValueAssign : varName '=' number EOL {
                                                 printf("Assign: %d => variable %s\n",$3,$1);
                                             }
                                             else{
-                                                printf("Mismatch: %d is purno =>variable %s is %s\n",$3,$1,symbolTable[i].type);
+                                                printf("line %d => Mismatch: %d is purno =>variable %s is %s\n",yylineno,$3,$1,symbolTable[i].type);
                                             }
                                         }
                                         else{
-                                            printf("Not Declared : variable %s\n",$1);
+                                            printf("line %d => Not Declared : variable %s\n",yylineno,$1);
                                         }
                                     }
                     |varName '=' numberd EOL {
@@ -427,11 +438,11 @@ variableValueAssign : varName '=' number EOL {
                                                 printf("Assign: %f => variable %s\n",$3,$1);
                                             }
                                             else{
-                                                printf("Mismatch: %f is vogno =>variable %s is %s\n",$3,$1,symbolTable[i].type);
+                                                printf("line %d => Mismatch: %f is vogno =>variable %s is %s\n",yylineno,$3,$1,symbolTable[i].type);
                                             }
                                         }
                                         else{
-                                            printf("Not Declared : variable %s\n",$1);
+                                            printf("line %d => Not Declared : variable %s\n",yylineno,$1);
                                         }
                                     }
                     
@@ -449,7 +460,7 @@ variableValueAssign : varName '=' number EOL {
                                             }
                                         }
                                         else{
-                                            printf("Not Declared : variable %s\n",$1);
+                                            printf("line %d => Not Declared : variable %s\n",yylineno,$1);
                                         }
                                     }
 
@@ -461,12 +472,12 @@ variableValueAssign : varName '=' number EOL {
                                             printf("Assign: %s => variable %s\n",$4,$1);
                                         }
                                         else {
-                                            printf("Mismatch: %s is shobdo =>variable %s is %s\n",$4,$1,symbolTable[i].type);
+                                            printf("line %d => Mismatch: %s is shobdo =>variable %s is %s\n",yylineno,$4,$1,symbolTable[i].type);
                                         }
                                         
                                     }
                                     else{
-                                        printf("Not Declared : variable %s\n",$1);
+                                        printf("line %d => Not Declared : variable %s\n",yylineno,$1);
                                     }
                     }
 

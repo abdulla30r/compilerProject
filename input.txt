@@ -1,5 +1,10 @@
 addHeader  "myHeader.h"
 #hasib#
+func myFunc(parameters)=>(purno a){
+	purno a = 34;
+}
 shuru
-purno a;
+	vogno a;
+	purno b=34.5;
+	vogno a =35;
 sesh

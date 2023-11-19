@@ -15,6 +15,8 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
+"parameters"		{return parameters;}
+
 [`]			{return qt;}
 "func"		{return FUNC;}
 "inc"		{return INC;}
