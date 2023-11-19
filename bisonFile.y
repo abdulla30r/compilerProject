@@ -136,8 +136,8 @@ header: headerStart headerName {{printf("Included: %s\n",$2);}}
 program:
         |start statements end
 
-start : shuru {printf("-------------Program started--------------\n");}
-end : sesh {printf("-------------Program Ended--------------\n");}
+start : shuru {printf("-------------Started: Main--------------\n\n");}
+end : sesh {printf("\n-------------Ended: Main--------------\n");}
 
 
 statements : statement statements
