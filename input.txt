@@ -1,10 +1,4 @@
 addHeader  "myHeader.h"
 shuru
-shobdo a=`hello`;
-if(a==a){
-
-}
-else{
-
-}
+purno a;
 sesh

@@ -2,6 +2,8 @@
 	#include "bisonFile.tab.h"
 %}
 
+%option yylineno
+
 sp [!@$%^&*()-_=+{}\[\]:;<>,.?\/\\|]
 anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 
@@ -54,8 +56,8 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 (#){anything}(#)	{return comment;}
 
 (\n)	{}
-[ ]	{}
-[\t] {}
+[ ]		{}
+[\t] 	{}
 .	{printf("ERROR %s\n",yytext);}
 %%
 

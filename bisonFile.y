@@ -6,8 +6,27 @@ extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
 extern FILE *yyout;
+extern int yylineno;
 
 #define MAX_SYMBOLS 100
+
+char *myArray[] = {"purno", "vogno","shobdo","if", "else", "addHeader", "func","loop","shuru","sesh","inc","dec","eval","show"};
+int isKeyword(const char *target) {
+    int size = sizeof(myArray) / sizeof(myArray[0]);
+    for (int i = 0; i < size; ++i) {
+        if (strcmp(myArray[i], target) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void printKeywords(){
+    printf("-----KeyWord list-----\n");
+    for (int i = 0; i < sizeof(myArray) / sizeof(myArray[0]); ++i) {
+        printf("%s ", myArray[i]);
+    }
+}
 
 typedef struct {
     char* name;
@@ -47,7 +66,7 @@ int find(char* name) {
 }
 
 void printSymbolTable() {
-    printf("\nSymbol Table:\n");
+    printf("\n-----Symbol Table-----\n");
     for (int i = 0; i < symbolCount; ++i) {
         if(!strcmp(symbolTable[i].type, "purno")){
             printf("Name: %s,Type: %s,Value: %d\n",
@@ -73,6 +92,8 @@ void printSymbolTable() {
 int isPurno = 0;
 
 %}
+
+
 %union {
     int num;
     char* txt;
@@ -319,11 +340,11 @@ oneVar: varName {
                     printf("Already declared: Variable %s \n", $1);
             } 
             else{
-                if(isPurno){
+                if(isPurno==1){
                     add($1,"purno",0,0.0,"");
                     printf("Created: %s => purno\n", $1);
                 }
-                else{
+                else if(isPurno==0){
                     add($1,"vogno",0,0.0,"");
                     printf("Created : %s =>  vogno\n",$1);
                 }
@@ -453,7 +474,7 @@ variableValueAssign : varName '=' number EOL {
 
 
 int yyerror(char *s) {
-    printf("%s\n", s);
+    printf("Error at line %d: => %s\n",yylineno,s);
     return 0;
 }
 
@@ -462,5 +483,6 @@ int main(void) {
     freopen("output.txt","w",stdout);
     yyparse();
 
-    printSymbolTable();
+    //printSymbolTable();
+    //printKeywords();
 }
