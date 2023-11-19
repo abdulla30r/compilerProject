@@ -1,7 +1,10 @@
 addHeader  "myHeader.h"
 shuru
 shobdo a=`hello`;
-loop(a<5;inc a+1){
+if(a==a){
+
+}
+else{
 
 }
 sesh
