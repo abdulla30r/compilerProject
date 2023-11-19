@@ -14,24 +14,27 @@ typedef struct {
     char* type;
     int intValue;
     double doubleValue;
+    char* strValue;
 } SymbolEntry;
 
 SymbolEntry symbolTable[MAX_SYMBOLS];
 int symbolCount = 0;
 int ifcount = 0;
 
-void add(char* name,char* type,int a,double b) {
+void add(char* name,char* type,int a,double b,char* str) {
     SymbolEntry entry;
     entry.name = strdup(name);
     entry.type = strdup(type);
     entry.intValue = a;  
     entry.doubleValue = b;
+    entry.strValue = str;
     symbolTable[symbolCount++] = entry;
 }
 
-void update(int i,int a,double b){    
+void update(int i,int a,double b,char* str){    
         symbolTable[i].intValue = a;
         symbolTable[i].doubleValue = b;
+        symbolTable[i].strValue = str;
 }
 
 int find(char* name) {
@@ -57,6 +60,12 @@ void printSymbolTable() {
                symbolTable[i].name,symbolTable[i].type,
                symbolTable[i].doubleValue);
         }
+
+        if(!strcmp(symbolTable[i].type, "shobdo")){
+            printf("Name: %s,Type: %s,Value: %s\n",
+               symbolTable[i].name,symbolTable[i].type,
+               symbolTable[i].strValue);
+        }
         
     }
 }
@@ -70,9 +79,9 @@ int isPurno = 0;
     double numd;
 }
 
-%token headerStart comment purno EOL vogno eval mod show shuru sesh IF ELSE
-%token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual
-%token LOOP INC DEC
+%token headerStart comment purno EOL vogno shobdo eval mod show shuru sesh IF ELSE
+%token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual qt
+%token LOOP INC DEC FUNC
 %token <txt> headerName
 %type <txt> header
 %token <txt> varName
@@ -89,8 +98,12 @@ int isPurno = 0;
 
 %%
 input:headers program
+    | headers functions program
     | cmnt input
 
+functions: func functions
+        |func
+func: FUNC varName '(' ')' '{'statements'}' {printf("%s Function declared\n",$2);}
 cmnt: comment {printf("This is a comment\n");}
 
 headers: header headers
@@ -134,8 +147,11 @@ statement:
                                     if(!strcmp(symbolTable[i].type, "purno")){    
                                         x = symbolTable[i].intValue;
                                     }
-                                    else{
+                                    else if(!strcmp(symbolTable[i].type, "vogno")){    
                                         x =(int) symbolTable[i].doubleValue;
+                                    }
+                                    else{
+                                        x =0;
                                     }
 
                                     if(!strcmp($4,"<=")){
@@ -160,7 +176,8 @@ statement:
                                     }
                                 }
                             }
-
+        | varName '(' ')' EOL {printf("%s Function Called\n",$1);}
+        
         changer: INC {$$ = "inc";}
                 |DEC {$$ = "dec";}
 
@@ -228,8 +245,11 @@ value: varName {
                 if(!strcmp(symbolTable[i].type, "purno")){    
                     printf("SHOW: %s => %d\n",$1,symbolTable[i].intValue);
                 }
-                else{
-                    printf("SHOW: %s =>%f\n",$1,symbolTable[i].doubleValue);
+                else if(!strcmp(symbolTable[i].type, "shobdo")){    
+                    printf("SHOW: %s => %s\n",$1,symbolTable[i].strValue);
+                }
+                if(!strcmp(symbolTable[i].type, "vogno")){    
+                    printf("SHOW: %s => %f\n",$1,symbolTable[i].doubleValue);
                 }
             
             }
@@ -253,16 +273,23 @@ expr: val {$$ = $1;}
 
 val: number {$$ = $1*1.0;}
     | numberd {$$ = $1;}
+    | qt varName qt {
+                printf("Not a number: %s => shobdo\n",$2);
+                $$ = 0.0;
+            }
     | varName {
             int i = find($1);
             if(i!=-1){
                 if(!strcmp(symbolTable[i].type, "purno")){    
                     $$ = symbolTable[i].intValue * 1.0;
                 }
-                else{
+                if(!strcmp(symbolTable[i].type, "vogno")){    
                     $$ = symbolTable[i].doubleValue;
                 }
-            
+                else{
+                    printf("Not a number: %s => shobdo \n",$1);
+                    $$ = 0.0;
+                }           
             }
             else{
                 printf("Not Declared: Variable %s\n",$1);
@@ -274,6 +301,7 @@ multiVariable: dataType varNames
 
 dataType : purno {isPurno = 1;}
         | vogno {isPurno = 0;}
+        | shobdo {isPurno = -1;}
 
 varNames: oneVar ',' varNames
         |oneVar EOL
@@ -284,11 +312,11 @@ oneVar: varName {
             } 
             else{
                 if(isPurno){
-                    add($1,"purno",0,0.0);
+                    add($1,"purno",0,0.0,"");
                     printf("Created: %s => purno\n", $1);
                 }
                 else{
-                    add($1,"vogno",0,0.0);
+                    add($1,"vogno",0,0.0,"");
                     printf("Created : %s =>  vogno\n",$1);
                 }
             }
@@ -299,12 +327,15 @@ oneVar: varName {
                         printf("Already declared: Variable %s \n", $1);
                     } 
                     else{
-                        if(isPurno){
-                            add($1,"purno",$3,0.0);
+                        if(isPurno==1){
+                            add($1,"purno",$3,0.0,"");
                             printf("Created: %s: %d => purno\n", $1,$3);
                         }
-                        else{
+                        else if(isPurno==0){
                             printf("Mismatch: %s => vogno , value %d: purno\n",$1, $3);
+                        }
+                        else if(isPurno==-1){
+                            printf("Mismatch: %s => shobdo , value %d: purno\n",$1, $3);
                         }
                     }
                 }
@@ -313,22 +344,42 @@ oneVar: varName {
                         printf("Already declared: Variable %s \n", $1);
                     } 
                     else{
-                        if(!isPurno){
-                            add($1,"vogno",0,$3);
+                        if(isPurno==0){
+                            add($1,"vogno",0,$3,"");
                             printf("Created: %s: %f => vogno\n", $1,$3);
                         }
-                        else{
+                        else if(isPurno == 1){
                             printf("Mismatch: %s => purno , value %f: vogno\n",$1,$3);
+                        }
+                        else if(isPurno ==-1) {
+                            printf("Mismatch: %s => shobdo , value %f: vogno\n",$1,$3);
+                        }
+                    }
+            }
+
+        | varName '=' qt varName qt {
+                    if (find($1) != -1) {
+                        printf("Already declared: Variable %s \n", $1);
+                    } 
+                    else{
+                        if(isPurno==-1){
+                            add($1,"shobdo",0,0.0,$4);
+                            printf("Created: %s: %s => shobdo\n", $1,$4);
+                        }
+                        else if (isPurno==1){
+                            printf("Mismatch: %s => purno , value %s: shobdo\n",$1,$4);
+                        }
+                        else if (isPurno==0){
+                            printf("Mismatch: %s => vogno , value %s: shobdo\n",$1,$4);
                         }
                     }
         }
-
 
 variableValueAssign : varName '=' number EOL {
                                         int i = find($1);
                                         if(i!=-1){
                                             if(!strcmp(symbolTable[i].type, "purno")){
-                                                update(i,$3,0.0);
+                                                update(i,$3,0.0,"");
                                                 printf("Assign: %d => variable %s\n",$3,$1);
                                             }
                                             else{
@@ -343,7 +394,7 @@ variableValueAssign : varName '=' number EOL {
                                         int i = find($1);
                                         if(i!=-1){
                                             if(!strcmp(symbolTable[i].type, "vogno")){
-                                                update(i,0,$3);                                                    
+                                                update(i,0,$3,"");                                                    
                                                 printf("Assign: %f => variable %s\n",$3,$1);
                                             }
                                             else{
@@ -359,12 +410,12 @@ variableValueAssign : varName '=' number EOL {
                                         int i = find($1);
                                         if(i!=-1){
                                             if(!strcmp(symbolTable[i].type, "vogno")){
-                                                update(i,0,$3);
+                                                update(i,0,$3,"");
                                                 printf("Assign: %f => variable %s\n",$3,$1);
                                             }
                                             else {
                                                 int val = (int)$3;
-                                                update(i,val,0.0);
+                                                update(i,val,0.0,"");
                                                 printf("Assign: %d => variable %s\n",val,$1);
                                             }
                                         }
@@ -372,6 +423,23 @@ variableValueAssign : varName '=' number EOL {
                                             printf("Not Declared : variable %s\n",$1);
                                         }
                                     }
+
+                    |varName '=' qt varName qt EOL{
+                                    int i = find($1);
+                                    if(i!=-1){
+                                        if(!strcmp(symbolTable[i].type, "shobdo")){
+                                            update(i,0,0.0,$4);
+                                            printf("Assign: %s => variable %s\n",$4,$1);
+                                        }
+                                        else {
+                                            printf("Mismatch: %s is shobdo =>variable %s is %s\n",$4,$1,symbolTable[i].type);
+                                        }
+                                        
+                                    }
+                                    else{
+                                        printf("Not Declared : variable %s\n",$1);
+                                    }
+                    }
 
 %%
 

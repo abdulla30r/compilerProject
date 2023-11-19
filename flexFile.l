@@ -13,6 +13,8 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
+[`]			{return qt;}
+"func"		{return FUNC;}
 "inc"		{return INC;}
 "dec"		{return DEC;}
 "=="		{return isEqual;}
@@ -40,6 +42,7 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 "shuru" 	{return shuru;}
 "sesh" 		{return sesh;}
 "vogno" 	{return vogno;}
+"shobdo" 	{return shobdo;}
 "eval"		{return eval;}
 "%"			{return mod;}
 
