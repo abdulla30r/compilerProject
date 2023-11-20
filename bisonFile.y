@@ -15,7 +15,7 @@ void yyexit(const char *message);
 
 int funcVarCount = 0;
 
-char *myArray[] = {"purno", "vogno","shobdo","if", "else", "addHeader", "func","loop","shuru","sesh","inc","dec","eval","show"};
+char *myArray[] = {"purno", "vogno","shobdo","if", "else", "addHeader", "func","loop","shuru","sesh","inc","dec","eval","show","tan","log","log10","pow","cos","sin","ceil","floor","len","compare","copy","concat"};
 int isKeyword(const char *target) {
     int size = sizeof(myArray) / sizeof(myArray[0]);
     for (int i = 0; i < size; ++i) {
@@ -879,5 +879,5 @@ int main(void) {
     yyparse();
 
     printSymbolTable();
-    //printKeywords();
+    printKeywords();
 }
