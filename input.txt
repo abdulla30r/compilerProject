@@ -1,10 +1,9 @@
-addHeader  "myHeader.h"
-#hasib#
-func myFunc(parameters)=>(purno a){
-	purno a = 34;
+addHeader "myHeader.h"
+func myFunc(purno a)=>(vogno c){
+	eval 9+8;
 }
+
+
 shuru
-	vogno a;
-	purno b=34.5;
-	vogno a =35;
+	myFunc(purno a,purno b);
 sesh

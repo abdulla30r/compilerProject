@@ -1,14 +1,18 @@
 %{
 #include<stdio.h>
 #include <string.h>
+#include<stdlib.h>
 int yyerror(char *s);
 extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
 extern FILE *yyout;
 extern int yylineno;
+void yyexit(const char *message);
 
 #define MAX_SYMBOLS 100
+
+int funcVarCount = 0;
 
 char *myArray[] = {"purno", "vogno","shobdo","if", "else", "addHeader", "func","loop","shuru","sesh","inc","dec","eval","show"};
 int isKeyword(const char *target) {
@@ -69,13 +73,13 @@ void printSymbolTable() {
     printf("\n-----Symbol Table-----\n");
     for (int i = 0; i < symbolCount; ++i) {
         if(!strcmp(symbolTable[i].type, "purno")){
-            printf("Name: %s,Type: %s,Value: %d\n",
+            printf("Name: %s,Type: %s, Value: %d\n",
                symbolTable[i].name,symbolTable[i].type,
                symbolTable[i].intValue);
         }
 
         if(!strcmp(symbolTable[i].type, "vogno")){
-            printf("Name: %s,Type: %s,Value: %f\n",
+            printf("Name: %s,Type: %s, Value: %f\n",
                symbolTable[i].name,symbolTable[i].type,
                symbolTable[i].doubleValue);
         }
@@ -85,6 +89,9 @@ void printSymbolTable() {
                symbolTable[i].name,symbolTable[i].type,
                symbolTable[i].strValue);
         }
+        if(!strcmp(symbolTable[i].type, "funcType")){
+            printf("Name: %s,Type: Function, Parameter: %d\n",symbolTable[i].name, symbolTable[i].intValue);
+        }
         
     }
 }
@@ -92,7 +99,6 @@ void printSymbolTable() {
 int isPurno = 0;
 
 %}
-
 
 %union {
     int num;
@@ -102,13 +108,13 @@ int isPurno = 0;
 
 %token headerStart comment purno EOL vogno shobdo eval mod show shuru sesh IF ELSE
 %token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual qt
-%token LOOP INC DEC FUNC parameters
+%token LOOP INC DEC FUNC
 %token <txt> headerName varName
 %token <num> number
 %token <numd> numberd
 
 %type <numd> expr val
-%type <txt> changer funcShuru var condition loopOP header dataType
+%type <txt> changer funcShuru condition loopOP header dataType
 
 %left '+' '-'
 %left '/' '*'
@@ -122,19 +128,48 @@ input:headers program
 functions: function functions
         |function
 
-function: funcShuru '(' parameters ')' '=' isLarge '(' dataType var ')' '{'statements'}' {
-                                printf("Return type of %s: %s => varName: %s ", $1,$8,$9);
-                                printf("\n-------------Ended:%s Declaration-------------\n\n",$1);
+function: funcShuru '(' parameters ')' '=' isLarge '(' Ret ')' '{'statements'}' {
+
+                                int i = find($1);
+                                if(i!=-1){  
+                                    update(i,funcVarCount,0.0,"");
+
+                                }
+                                funcVarCount = 0;
+                                printf("-------------Ended:%s Declaration-------------\n\n",$1);
                             }
 
-funcShuru: FUNC varName{
-        printf("\n-------------Started: %s Declaration-------------\n\n",$2);
-        $$ = $2;
-    }
+parameters: {printf("No parameters");}
+        | onePar 
+        | onePar ',' parameters
 
-var: varName {
-            $$ = $1;   
+Ret:    {
+            printf("\nReturn: No Return\n");
+            printf("--Statements inside function--\n");
         }
+    | dataType varName {
+        printf("\nReturn: %s %s\n",$1,$2);
+        printf("--Statements inside function--\n");
+        }
+onePar: dataType varName    {
+    funcVarCount++;
+    printf("%s %s ,",$1,$2);
+}
+
+funcShuru: FUNC varName{
+            if (find($2) != -1) {
+                printf("line %d => Already declared:  %s \n",yylineno, $2);
+                yyexit("Error occured");
+            } 
+            else{
+                add($2,"funcType",0,0.0,"");
+                printf("\n-------------Started: %s Declaration-------------\n",$2);
+                printf("Parameters: ");
+                $$ = $2;
+
+            }       
+        
+    }
 
 cmnt: comment {printf("This is a comment\n");}
 
@@ -208,12 +243,44 @@ statement:
                                     }
                                 }
                             }
-        | varName '(' ')' EOL {printf("%s Function Called\n",$1);}
-        
-        changer: INC {$$ = "inc";}
-                |DEC {$$ = "dec";}
+        | varName '(' ')' EOL {
+                        int i = find($1);
+                        if(i!=-1 && symbolTable[i].intValue == 0 && !strcmp(symbolTable[i].type, "funcType")){
+                            printf("%s Function called with 0 parameters.\n",symbolTable[i].name);
+                        }
+                        else{
+                            printf("No Function Found for %s\n",$1);
+                        }                       
+                    }
+        | varName '(' callPar ')' EOL {
+                        int i = find($1);
+                        if(i!=-1 && !strcmp(symbolTable[i].type, "funcType")){
+                            if(symbolTable[i].intValue == funcVarCount){
+                                printf("%s Function called with %d parameters.\n",symbolTable[i].name,funcVarCount);
+                            }
+                            else{
+                                printf("Mismatch: Parameter Count =>%s has %d , called with %d\n",$1,symbolTable[i].intValue,funcVarCount);
+                            }
+                        }
+                        else{
+                            printf("No Function Found for %s\n",$1);
+                        }   
 
-        loopOP: isLarge {$$ = ">";}
+                        funcVarCount = 0;                    
+                    }
+        
+callPar: oneCall 
+        | oneCall ',' callPar
+
+oneCall : dataType varName {
+    funcVarCount++;
+}        
+
+
+changer: INC {$$ = "inc";}
+        |DEC {$$ = "dec";}
+
+loopOP: isLarge {$$ = ">";}
             | isLargeEqual {$$ = ">=";}
             | isSmaller {$$ = "<";}
             | isSmallerEqual {$$ = "<=";}
@@ -489,11 +556,16 @@ int yyerror(char *s) {
     return 0;
 }
 
+void yyexit(const char *message) {
+    fprintf(stderr, "Exit: %s\n", message);
+    exit(EXIT_SUCCESS);
+}
+
 int main(void) {
     freopen("input.txt","r",stdin);
     freopen("output.txt","w",stdout);
     yyparse();
 
-    //printSymbolTable();
+    printSymbolTable();
     //printKeywords();
 }

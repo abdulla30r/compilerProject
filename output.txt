@@ -1,0 +1,18 @@
+Included: myHeader.h
+
+-------------Started: myFunc Declaration-------------
+Parameters: purno a ,
+Return: vogno c
+--Statements inside function--
+Evaluated result is : 17.000000
+-------------Ended:myFunc Declaration-------------
+
+
+-------------Started: Main--------------
+
+Mismatch: Parameter Count =>myFunc has 1 , called with 2
+
+-------------Ended: Main--------------
+
+-----Symbol Table-----
+Name: myFunc,Type: Function, Parameter: 1
