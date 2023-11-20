@@ -154,7 +154,7 @@ Ret:    {
 onePar: dataType varName    {
     funcVarCount++;
     printf("%s %s ,",$1,$2);
-}
+    }
 
 funcShuru: FUNC varName{
             if (find($2) != -1) {
@@ -183,7 +183,6 @@ program:start statements end
 
 start : shuru {printf("\n-------------Started: Main--------------\n\n");}
 end : sesh {printf("\n-------------Ended: Main--------------\n");}
-
 
 statements : statement statements
         | statement
@@ -282,7 +281,7 @@ statement:
                             strcpy(tmp, $5);
                             strcat(tmp,$7);
                             symbolTable[i].strValue = tmp;
-                            printf("Concatenation: %s => %s",symbolTable[i].name,symbolTable[i].strValue);
+                            printf("Concatenation: %s => %s\n",symbolTable[i].name,symbolTable[i].strValue);
                         }
                     }
                 }
@@ -297,7 +296,7 @@ statement:
                         }
                         else{
                             symbolTable[i].strValue = $5;
-                            printf("Copy: %s => %s",symbolTable[i].name,symbolTable[i].strValue);
+                            printf("Copy: %s => %s\n",symbolTable[i].name,symbolTable[i].strValue);
                         }
                     }
                 }
@@ -319,7 +318,7 @@ statement:
                                 symbolTable[i].strValue = "true";
                             }
                             
-                            printf("Compare: %s and %s => %s",$5,$7,symbolTable[i].strValue);
+                            printf("Compare: %s and %s => %s\n",$5,$7,symbolTable[i].strValue);
                         }
                     }
                 }
@@ -335,7 +334,7 @@ statement:
                     }
                     else{
                         symbolTable[i].intValue = strlen($5);
-                        printf("Length: %s  => %d",$5,symbolTable[i].intValue);
+                        printf("Length: %s  => %d\n",$5,symbolTable[i].intValue);
                     }
                 }
             }
@@ -644,7 +643,6 @@ variableValueAssign : varName '=' number EOL {
                     }
 
 %%
-
 
 int yyerror(char *s) {
     printf("Error at line %d: => %s\n",yylineno,s);
