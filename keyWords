@@ -1,0 +1,40 @@
+basic syntax
+	shuru
+    sesh
+	addHeader
+	eval
+    show
+	scan
+	#comment#
+
+data type
+	purno
+    vogno
+    shobdo
+
+operational
+	inc
+    dec
+	+ - * / %
+
+conditional
+	if
+    else
+
+loop
+	loop
+
+function
+	func
+	tan
+    log
+    log10
+    pow
+    cos
+    sin
+    ceil
+    floor
+    len
+    compare
+    copy
+    concat

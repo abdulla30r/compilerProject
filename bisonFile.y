@@ -1,3 +1,4 @@
+
 %{
 #include<stdio.h>
 #include <string.h>
@@ -15,7 +16,7 @@ void yyexit(const char *message);
 
 int funcVarCount = 0;
 
-char *myArray[] = {"purno", "vogno","shobdo","if", "else", "addHeader", "func","loop","shuru","sesh","inc","dec","eval","show","tan","log","log10","pow","cos","sin","ceil","floor","len","compare","copy","concat"};
+char *myArray[] = {"purno", "vogno","shobdo","if", "else", "addHeader", "func","loop","shuru","sesh","inc","dec","eval","show","tan","log","log10","pow","cos","sin","ceil","floor","gcd","len","compare","copy","concat"};
 int isKeyword(const char *target) {
     int size = sizeof(myArray) / sizeof(myArray[0]);
     for (int i = 0; i < size; ++i) {
@@ -98,7 +99,6 @@ void printSymbolTable() {
     }
 }
 
-
 %}
 
 %union {
@@ -109,7 +109,7 @@ void printSymbolTable() {
 
 %token headerStart comment purno EOL vogno shobdo eval mod show shuru sesh IF ELSE concat
 %token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual qt compare
-%token LOOP INC DEC FUNC copy len FLOOR CEIL SIN COS TAN LOG POW LOG10
+%token LOOP INC DEC FUNC copy len FLOOR CEIL SIN COS TAN LOG POW LOG10 scan GCD
 %token <txt> headerName varName
 %token <num> number
 %token <numd> numberd 
@@ -189,6 +189,14 @@ statements : statement statements
         | statement
 
 statement:
+        | scan varName EOL{
+            if (find($2) != -1) {
+                    printf("Waiting: User input in %s",$2);
+            } 
+            else{
+                printf("line %d => Not exist: %s variable",yylineno,$2);
+            }
+        }
         | cmnt
         | multiVariable
         | variableValueAssign
@@ -222,22 +230,22 @@ statement:
 
                                     if(!strcmp($4,"<=")){
                                         for(int m = x;m<=y;m+=incSize){
-                                            printf("Loop executed for %d\n",m);
+                                            printf("Loop: Executed for %d\n",m);
                                         }
                                     }
                                     if(!strcmp($4,">=")){
                                         for(int m = x;m>=y;m+=incSize){
-                                            printf("Loop executed for %d\n",m);
+                                            printf("Loop: Executed for %d\n",m);
                                         }
                                     }
                                     if(!strcmp($4,">")){
                                         for(int m = x;m>y;m+=incSize){
-                                            printf("Loop executed for %d\n",m);
+                                            printf("Loop: Executed for %d\n",m);
                                         }
                                     }
                                     if(!strcmp($4,"<")){
                                         for(int m = x;m<y;m+=incSize){
-                                            printf("Loop executed for %d\n",m);
+                                            printf("Loop: Executed for %d\n",m);
                                         }
                                     }
                                 }
@@ -245,24 +253,24 @@ statement:
         | varName '(' ')' EOL {
                         int i = find($1);
                         if(i!=-1 && symbolTable[i].intValue == 0 && !strcmp(symbolTable[i].type, "funcType")){
-                            printf("%s Function called with 0 parameters.\n",symbolTable[i].name);
+                            printf("Call: %s Function called with 0 parameters.\n",symbolTable[i].name);
                         }
                         else{
-                            printf("No Function Found for %s\n",$1);
+                            printf("line %d => No Function Found for %s\n",yylineno,$1);
                         }                       
                     }
         | varName '(' callPar ')' EOL {
                         int i = find($1);
                         if(i!=-1 && !strcmp(symbolTable[i].type, "funcType")){
                             if(symbolTable[i].intValue == funcVarCount){
-                                printf("%s Function called with %d parameters.\n",symbolTable[i].name,funcVarCount);
+                                printf("Call: %s Function called with %d parameters.\n",symbolTable[i].name,funcVarCount);
                             }
                             else{
-                                printf("Mismatch: Parameter Count =>%s has %d , called with %d\n",$1,symbolTable[i].intValue,funcVarCount);
+                                printf("line %d => Mismatch: Parameter Count =>%s has %d , called with %d\n",yylineno,$1,symbolTable[i].intValue,funcVarCount);
                             }
                         }
                         else{
-                            printf("No Function Found for %s\n",$1);
+                            printf("line %d => Not exist: Function %s\n",yylineno,$1);
                         }   
 
                         funcVarCount = 0;                    
@@ -514,29 +522,61 @@ statement:
             }
 
         | varName '=' POW '(' numberParameter ',' numberParameter')' EOL {
+                int i = find($1);
+                if(i==-1){
+                    printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                }
+                else{
+                    double result;
+                    if(!strcmp(symbolTable[i].type, "shobdo")){    
+                        printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
+                    }
+                    else{
+                        result = pow($5,$7);
+                        if(!strcmp(symbolTable[i].type, "purno")){
+                            symbolTable[i].intValue = (int) result;
+                            printf("Power: %f  ^ %f => %d\n",$5,$7,symbolTable[i].intValue);
+                        }
+
+                        if(!strcmp(symbolTable[i].type, "vogno")){
+                            symbolTable[i].doubleValue = result;
+                            printf("Power: %f  ^ %f => %f\n",$5,$7,symbolTable[i].doubleValue);
+                        }
+                    }
+                }
+            }
+        | varName '=' GCD '(' numberParameter ',' numberParameter')' EOL {
             int i = find($1);
             if(i==-1){
                 printf("line %d => Not Exist: variable %s\n",yylineno,$1);
             }
             else{
-                double result;
+                int result;
                 if(!strcmp(symbolTable[i].type, "shobdo")){    
                     printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
                 }
                 else{
-                    result = pow($5,$7);
+                    int b = (int)$7;
+                    int a = (int)$5;
+                    while (b != 0) {
+                        int temp = b;
+                        b = a % b;
+                        a = temp;
+                    }
+
+                    result = a;
+
                     if(!strcmp(symbolTable[i].type, "purno")){
                         symbolTable[i].intValue = (int) result;
-                        printf("Power: %f  ^ %f => %d\n",$5,$7,symbolTable[i].intValue);
+                        printf("GCD: %d and %d => %d\n",(int)$5,(int)$7,symbolTable[i].intValue);
                     }
 
                     if(!strcmp(symbolTable[i].type, "vogno")){
-                        symbolTable[i].doubleValue = result;
-                        printf("Power: %f  ^ %f => %f\n",$5,$7,symbolTable[i].doubleValue);
+                        printf("line %d => Mismatch: Datatype => GCD can only be purno\n",yylineno);
                     }
                 }
             }
-            }
+        }
 
 numberParameter : number {$$ = $1*1.0;}
                 | numberd {$$ = $1;}

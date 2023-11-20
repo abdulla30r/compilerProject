@@ -1,6 +1,56 @@
+#	Name: Abdulla Rahman
+	Roll: 1907030
+	Final Project
+	Compiler Design Laboratory
+#
 addHeader "myHeader.h"
 
+func myFunc()=>(){
+	
+}
+
+func myFunc2(purno a,vogno b)=>(purno c){
+
+	eval 9+8;
+}
+
 shuru
-	purno b;
-	b = pow(2.7,3.3);
+	purno b=3;
+	scan c;
+	show b;
+	vogno a=45.9,c=12.4,d;
+
+	myFunc(purno x);
+	myFunc2(purno y,vogno z);
+	d = 45.6-2*5 +7%2;
+
+	if(d<a){
+		eval 34+2;
+	}
+	else{
+
+	}
+
+	loop(b<10;inc 2){
+		show b;
+		loop(b<10;inc 4){
+
+		}
+	}
+
+	#---String Operation---#
+	shobdo myShobdo = `Hel`,myShobdo2,compResult;
+	myShobdo = concat(myShobdo,`lo`);
+	myShobdo2 = copy(myShobdo);
+	b = len(myShobdo);
+	compResult = compare(myShobdo,myShobdo2);
+
+	#---Math Function---#
+	d = ceil(d);
+	d = pow(d,5);
+	d = log10(100);
+	d = tan(45);
+	purno k;
+	k = gcd(5,10);
+
 sesh

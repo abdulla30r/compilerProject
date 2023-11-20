@@ -1,0 +1,69 @@
+This is a comment
+Included: myHeader.h
+
+-------------Started: myFunc Declaration-------------
+Parameters: No parameters
+Return: No Return
+--Statements inside function--
+-------------Ended:myFunc Declaration-------------
+
+
+-------------Started: myFunc2 Declaration-------------
+Parameters: purno a ,vogno b ,
+Return: purno c
+--Statements inside function--
+Evaluated result is : 17.000000
+-------------Ended:myFunc2 Declaration-------------
+
+
+-------------Started: Main--------------
+
+Created: b: 3 => purno
+line 19 => Not exist: c variableSHOW: b => 3
+Created: a: 45.900000 => vogno
+Created: c: 12.400000 => vogno
+Created : d =>  vogno
+line 23 => Mismatch: Parameter Count =>myFunc has 0 , called with 1
+Call: myFunc2 Function called with 2 parameters.
+Assign: 36.600000 => variable d
+Started: IF BLOCK
+Evaluated result is : 36.000000
+Finished: 1.IF-ELSE - true 
+SHOW: b => 3
+Loop: Executed for 3
+Loop: Executed for 7
+Loop: Executed for 3
+Loop: Executed for 5
+Loop: Executed for 7
+Loop: Executed for 9
+This is a comment
+Created: myShobdo: Hel => shobdo
+Created : myShobdo2 =>  shobdo
+Created : compResult =>  shobdo
+Concatenation: myShobdo => Hello
+Copy: myShobdo2 => Hello
+Length: Hello  => 5
+Compare: Hello and Hello => true
+This is a comment
+Ceil: 36.600000  => 37
+Power: 37.000000  ^ 5.000000 => 69343957.000000
+Log10: 100.000000  => 2.000000
+Tan: 45.000000  => 1.619775
+Created: k => purno
+GCD: 5 and 10 => 5
+
+-------------Ended: Main--------------
+
+-----Symbol Table-----
+Name: myFunc,Type: Function, Parameter: 0
+Name: myFunc2,Type: Function, Parameter: 2
+Name: b,Type: purno, Value: 5
+Name: a,Type: vogno, Value: 45.900000
+Name: c,Type: vogno, Value: 12.400000
+Name: d,Type: vogno, Value: 1.619775
+Name: myShobdo,Type: shobdo,Value: Hello
+Name: myShobdo2,Type: shobdo,Value: Hello
+Name: compResult,Type: shobdo,Value: true
+Name: k,Type: purno, Value: 5
+-----KeyWord list-----
+purno vogno shobdo if else addHeader func loop shuru sesh inc dec eval show tan log log10 pow cos sin ceil floor gcd len compare copy concat 

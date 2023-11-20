@@ -15,7 +15,8 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
-
+"scan"		{return scan;}
+"gcd"		{return GCD;}
 "tan"		{return TAN;}
 "log"		{return LOG;}
 "log10"		{return LOG10;}
