@@ -1,13 +1,6 @@
 addHeader "myHeader.h"
-
 shuru
-if(2<5){
-	shobdo a = `hello`;
-	show a;
-	purno c;
-	c = len(a);
-}
-else{
-	eval 2+3;
-}
+purno a;
+vogno b=30.0;
+b = sin(b);
 sesh

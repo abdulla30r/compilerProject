@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include <string.h>
 #include<stdlib.h>
+#include<math.h>
 int yyerror(char *s);
 extern int yylex();
 extern int yyparse();
@@ -43,6 +44,7 @@ typedef struct {
 SymbolEntry symbolTable[MAX_SYMBOLS];
 int symbolCount = 0;
 int ifcount = 0;
+int isPurno = 0;
 
 void add(char* name,char* type,int a,double b,char* str) {
     SymbolEntry entry;
@@ -96,7 +98,6 @@ void printSymbolTable() {
     }
 }
 
-int isPurno = 0;
 
 %}
 
@@ -108,12 +109,12 @@ int isPurno = 0;
 
 %token headerStart comment purno EOL vogno shobdo eval mod show shuru sesh IF ELSE concat
 %token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual qt compare
-%token LOOP INC DEC FUNC copy len
+%token LOOP INC DEC FUNC copy len FLOOR CEIL SIN
 %token <txt> headerName varName
 %token <num> number
-%token <numd> numberd
+%token <numd> numberd 
 
-%type <numd> expr val
+%type <numd> expr val numberParameter
 %type <txt> changer funcShuru condition loopOP header dataType stringParameter
 
 %left '+' '-'
@@ -338,6 +339,99 @@ statement:
                     }
                 }
             }
+
+        | varName '=' FLOOR '(' numberParameter ')' EOL {
+                    int i = find($1);
+                    if(i==-1){
+                        printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                    }
+                    else{
+                        double result;
+                        if(!strcmp(symbolTable[i].type, "shobdo")){    
+                            printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
+                        }
+                        else{
+                            result = floor($5);
+                            if(!strcmp(symbolTable[i].type, "purno")){
+                                symbolTable[i].intValue = (int) result;
+                                printf("Floor: %0.2f  => %d\n",$5,symbolTable[i].intValue);
+                            }
+
+                            if(!strcmp(symbolTable[i].type, "vogno")){
+                                symbolTable[i].doubleValue = result;
+                                printf("Floor: %f  => %0.0f\n",$5,symbolTable[i].doubleValue);
+                            }
+                        }
+                    }
+                }
+        | varName '=' CEIL '(' numberParameter ')' EOL {
+                int i = find($1);
+                if(i==-1){
+                    printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                }
+                else{
+                    double result;
+                    if(!strcmp(symbolTable[i].type, "shobdo")){    
+                        printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
+                    }
+                    else{
+                        result = ceil($5);
+                        if(!strcmp(symbolTable[i].type, "purno")){
+                            symbolTable[i].intValue = (int) result;
+                            printf("Ceil: %0.2f  => %d\n",$5,symbolTable[i].intValue);
+                        }
+
+                        if(!strcmp(symbolTable[i].type, "vogno")){
+                            symbolTable[i].doubleValue = result;
+                            printf("Ceil: %f  => %0.0f\n",$5,symbolTable[i].doubleValue);
+                        }
+                    }
+                }
+            }
+        | varName '=' SIN '(' numberParameter ')' EOL {
+            int i = find($1);
+            if(i==-1){
+                printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+            }
+            else{
+                double result;
+                if(!strcmp(symbolTable[i].type, "shobdo")){    
+                    printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
+                }
+                else{
+                    result = sin($5);
+                    if(!strcmp(symbolTable[i].type, "purno")){
+                        symbolTable[i].intValue = (int) result;
+                        printf("Sine: %0.2f  => %d\n",$5,symbolTable[i].intValue);
+                    }
+
+                    if(!strcmp(symbolTable[i].type, "vogno")){
+                        symbolTable[i].doubleValue = result;
+                        printf("Sine: %f  => %f\n",$5,symbolTable[i].doubleValue);
+                    }
+                }
+            }
+        }
+
+numberParameter : number {$$ = $1*1.0;}
+                | numberd {$$ = $1;}
+                | varName   {
+                    int i = find($1);
+                    if(i==-1){
+                        printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                    }
+                    else{
+                        if(!strcmp(symbolTable[i].type, "shobdo")){    
+                            printf("line %d => Mismatch: %s is not number.\n",yylineno,symbolTable[i].name);
+                        }
+                        else if(!strcmp(symbolTable[i].type, "purno")){
+                            $$ = symbolTable[i].intValue * 1.0 ;
+                        }
+                        else if(!strcmp(symbolTable[i].type, "vogno")){
+                            $$ = symbolTable[i].doubleValue ;
+                        }
+                    }
+                }
 
 stringParameter : qt varName qt {$$ = $2;}
                 | varName   {

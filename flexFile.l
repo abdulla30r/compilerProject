@@ -15,6 +15,9 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
+"sin"		{return SIN;}
+"ceil"		{return CEIL;}
+"floor"		{return FLOOR;}
 "len"		{return len;}
 "compare"	{return compare;}
 "copy"		{return copy;}
