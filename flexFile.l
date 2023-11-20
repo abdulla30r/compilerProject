@@ -15,6 +15,7 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
+"concat"	{return concat;}
 [`]			{return qt;}
 "func"		{return FUNC;}
 "inc"		{return INC;}
@@ -51,7 +52,6 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 [a-zA-Z_][a-zA-Z0-9_]* { yylval.txt = strdup(yytext); return varName; }
 [0-9]+ {yylval.num = atoi(yytext);return number;}
 [0-9]+\.[0-9]+ { yylval.numd = strtod(yytext, NULL); return numberd; }
-
 
 (#){anything}(#)	{return comment;}
 

@@ -1,9 +1,7 @@
 addHeader "myHeader.h"
-func myFunc(purno a)=>(vogno c){
-	eval 9+8;
-}
-
 
 shuru
-	myFunc(purno a,purno b);
+shobdo a;
+shobdo b=`hello`;
+a = concat(b,`world`);
 sesh

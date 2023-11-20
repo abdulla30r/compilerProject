@@ -106,7 +106,7 @@ int isPurno = 0;
     double numd;
 }
 
-%token headerStart comment purno EOL vogno shobdo eval mod show shuru sesh IF ELSE
+%token headerStart comment purno EOL vogno shobdo eval mod show shuru sesh IF ELSE concat
 %token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual qt
 %token LOOP INC DEC FUNC
 %token <txt> headerName varName
@@ -114,7 +114,7 @@ int isPurno = 0;
 %token <numd> numberd
 
 %type <numd> expr val
-%type <txt> changer funcShuru condition loopOP header dataType
+%type <txt> changer funcShuru condition loopOP header dataType stringParameter
 
 %left '+' '-'
 %left '/' '*'
@@ -267,9 +267,49 @@ statement:
 
                         funcVarCount = 0;                    
                     }
+
+        | varName '=' concat '(' stringParameter ',' stringParameter ')' EOL     {
+                    int i = find($1);
+                    if(i==-1){
+                        printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                    }
+                    else{
+                        if(strcmp(symbolTable[i].type, "shobdo")){    
+                            printf("line %d => Mismatch: %s is not shobdo.\n",yylineno,symbolTable[i].name);
+                        }
+                        else{
+                            char tmp[1000] = "";    
+                            strcpy(tmp, $5);
+                            strcat(tmp,$7);
+                            symbolTable[i].strValue = tmp;
+                        }
+                    }
+                }
+
+
         
 
+stringParameter : qt varName qt {$$ = $2;}
+                | varName   {
+                    int i = find($1);
+                    if(i==-1){
+                        printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                    }
+                    else{
+                        if(strcmp(symbolTable[i].type, "shobdo")){    
+                            printf("line %d => Mismatch: %s is not shobdo.\n",yylineno,symbolTable[i].name);
+                        }
 
+                        else{
+                            if(!strcmp(symbolTable[i].strValue,"")){
+                                printf("line %d => Missing value: %s is empty\n",yylineno,symbolTable[i].name);
+                            }
+                            else{
+                                $$ = symbolTable[i].strValue;
+                            }
+                        }
+                    }
+                }
 callPar: oneCall 
         | oneCall ',' callPar
 
@@ -425,6 +465,10 @@ oneVar: varName {
                 else if(isPurno==0){
                     add($1,"vogno",0,0.0,"");
                     printf("Created : %s =>  vogno\n",$1);
+                }
+                else if(isPurno==-1){
+                    add($1,"shobdo",0,0.0,"");
+                    printf("Created : %s =>  shobdo\n",$1);
                 }
             }
         }

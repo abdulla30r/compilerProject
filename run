@@ -1,5 +1,5 @@
 clear
 bison -d bisonFile.y
 lex flexFile.l
-gcc bisonFile.tab.c lex.yy.c
+gcc bisonFile.tab.c lex.yy.c -lm 
 ./a.out
