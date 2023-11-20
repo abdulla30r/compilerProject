@@ -179,8 +179,7 @@ headers: header headers
 
 header: headerStart headerName {printf("Included: %s\n",$2);}
 
-program:
-        |start statements end
+program:start statements end
 
 start : shuru {printf("\n-------------Started: Main--------------\n\n");}
 end : sesh {printf("\n-------------Ended: Main--------------\n");}
@@ -269,13 +268,14 @@ statement:
                         funcVarCount = 0;                    
                     }
         
+
+
 callPar: oneCall 
         | oneCall ',' callPar
 
 oneCall : dataType varName {
     funcVarCount++;
-}        
-
+}
 
 changer: INC {$$ = "inc";}
         |DEC {$$ = "dec";}
