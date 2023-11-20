@@ -1,7 +1,8 @@
 addHeader "myHeader.h"
 
 shuru
-shobdo a;
-shobdo b=`hello`;
-a = concat(b,`world`);
+shobdo a=`hasib`;
+shobdo b=`hasib`;
+purno c;
+c = len(b);
 sesh

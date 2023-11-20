@@ -107,8 +107,8 @@ int isPurno = 0;
 }
 
 %token headerStart comment purno EOL vogno shobdo eval mod show shuru sesh IF ELSE concat
-%token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual qt
-%token LOOP INC DEC FUNC
+%token isEqual isLarge isLargeEqual isSmaller isSmallerEqual isNotEqual qt compare
+%token LOOP INC DEC FUNC copy len
 %token <txt> headerName varName
 %token <num> number
 %token <numd> numberd
@@ -197,7 +197,7 @@ statement:
         | ifshuru '(' condition ')' '{' statements '}' ELSE '{' statements '}' {
                 ifcount++;
                 printf("Finished: %d.IF-ELSE - %s \n",ifcount,$3);
-        }
+            }
         | LOOP '(' varName loopOP expr EOL changer expr ')' '{' statements '}'  {
                                 int i = find($3);
                                 int x;
@@ -282,12 +282,63 @@ statement:
                             strcpy(tmp, $5);
                             strcat(tmp,$7);
                             symbolTable[i].strValue = tmp;
+                            printf("Concatenation: %s => %s",symbolTable[i].name,symbolTable[i].strValue);
+                        }
+                    }
+                }
+        | varName '=' copy '(' stringParameter ')' EOL     {
+                    int i = find($1);
+                    if(i==-1){
+                        printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                    }
+                    else{
+                        if(strcmp(symbolTable[i].type, "shobdo")){    
+                            printf("line %d => Mismatch: %s is not shobdo.\n",yylineno,symbolTable[i].name);
+                        }
+                        else{
+                            symbolTable[i].strValue = $5;
+                            printf("Copy: %s => %s",symbolTable[i].name,symbolTable[i].strValue);
+                        }
+                    }
+                }
+        
+        | varName '=' compare '(' stringParameter ',' stringParameter ')' EOL     {
+                    int i = find($1);
+                    if(i==-1){
+                        printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                    }
+                    else{
+                        if(strcmp(symbolTable[i].type, "shobdo")){    
+                            printf("line %d => Mismatch: %s is not shobdo.\n",yylineno,symbolTable[i].name);
+                        }
+                        else{
+                            if(strcmp($5,$7)){
+                                symbolTable[i].strValue = "false";
+                            }
+                            else{
+                                symbolTable[i].strValue = "true";
+                            }
+                            
+                            printf("Compare: %s and %s => %s",$5,$7,symbolTable[i].strValue);
                         }
                     }
                 }
 
-
-        
+        | varName '=' len '(' stringParameter  ')' EOL     {
+                int i = find($1);
+                if(i==-1){
+                    printf("line %d => Not Exist: variable %s\n",yylineno,$1);
+                }
+                else{
+                    if(strcmp(symbolTable[i].type, "purno")){    
+                        printf("line %d => Mismatch: %s is not purno.\n",yylineno,symbolTable[i].name);
+                    }
+                    else{
+                        symbolTable[i].intValue = strlen($5);
+                        printf("Length: %s  => %d",$5,symbolTable[i].intValue);
+                    }
+                }
+            }
 
 stringParameter : qt varName qt {$$ = $2;}
                 | varName   {
@@ -315,7 +366,7 @@ callPar: oneCall
 
 oneCall : dataType varName {
     funcVarCount++;
-}
+    }
 
 changer: INC {$$ = "inc";}
         |DEC {$$ = "dec";}
@@ -404,7 +455,7 @@ value: varName {
             else{
                 printf("line %d => Not Exist: Variable %s\n",yylineno,$1);
             }
-}
+    }
         
 expr: val {$$ = $1;}
     | expr '+' expr {$$ = $1 + $3;}

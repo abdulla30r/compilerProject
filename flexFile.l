@@ -15,6 +15,9 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
+"len"		{return len;}
+"compare"	{return compare;}
+"copy"		{return copy;}
 "concat"	{return concat;}
 [`]			{return qt;}
 "func"		{return FUNC;}
