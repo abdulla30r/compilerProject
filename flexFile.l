@@ -15,6 +15,12 @@ anything ([a-zA-Z0-9]|(\n)|(\t)|{sp}|[ ])*
 	return headerName;
 }
 
+
+"tan"		{return TAN;}
+"log"		{return LOG;}
+"log10"		{return LOG10;}
+"pow"		{return POW;}
+"cos"		{return COS;}
 "sin"		{return SIN;}
 "ceil"		{return CEIL;}
 "floor"		{return FLOOR;}

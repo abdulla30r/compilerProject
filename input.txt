@@ -1,6 +1,6 @@
 addHeader "myHeader.h"
+
 shuru
-purno a;
-vogno b=30.0;
-b = sin(b);
+	purno b;
+	b = pow(2.7,3.3);
 sesh
