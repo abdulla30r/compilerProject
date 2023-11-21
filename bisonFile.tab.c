@@ -675,14 +675,14 @@ static const yytype_int16 yyrline[] =
 {
        0,   125,   125,   126,   127,   129,   130,   132,   143,   144,
      145,   147,   151,   155,   160,   175,   177,   178,   179,   181,
-     183,   185,   186,   188,   189,   191,   192,   200,   201,   202,
-     203,   204,   205,   209,   253,   262,   279,   297,   313,   335,
-     351,   375,   399,   424,   449,   474,   499,   524,   548,   581,
-     582,   583,   601,   602,   622,   623,   625,   629,   630,   632,
-     633,   634,   635,   638,   639,   647,   655,   663,   671,   679,
-     687,   698,   718,   719,   720,   721,   722,   723,   730,   731,
-     732,   736,   756,   758,   759,   760,   762,   763,   765,   785,
-     802,   820,   838,   853,   869,   887
+     186,   188,   191,   195,   196,   198,   199,   207,   208,   209,
+     210,   211,   212,   216,   260,   269,   286,   304,   320,   342,
+     358,   382,   406,   432,   458,   484,   509,   534,   558,   591,
+     592,   593,   611,   612,   632,   633,   635,   639,   640,   642,
+     643,   644,   645,   648,   649,   658,   666,   674,   682,   690,
+     698,   709,   730,   731,   732,   733,   734,   735,   743,   744,
+     745,   750,   771,   773,   774,   775,   777,   778,   780,   801,
+     818,   836,   854,   870,   886,   904
 };
 #endif
 
@@ -1466,25 +1466,29 @@ yyreduce:
     break;
 
   case 19: /* header: headerStart headerName  */
-#line 181 "bisonFile.y"
-                               {printf("Included: %s\n",(yyvsp[0].txt));}
-#line 1472 "bisonFile.tab.c"
+#line 182 "bisonFile.y"
+{
+   
+    printf("Included: %s\n",(yyvsp[0].txt));}
+#line 1474 "bisonFile.tab.c"
     break;
 
   case 21: /* start: shuru  */
-#line 185 "bisonFile.y"
-              {printf("\n-------------Started: Main--------------\n\n");}
-#line 1478 "bisonFile.tab.c"
+#line 189 "bisonFile.y"
+{
+    printf("\n-------------Started: Main--------------\n\n");}
+#line 1481 "bisonFile.tab.c"
     break;
 
   case 22: /* end: sesh  */
-#line 186 "bisonFile.y"
-           {printf("\n-------------Ended: Main--------------\n");}
-#line 1484 "bisonFile.tab.c"
+#line 192 "bisonFile.y"
+{
+    printf("\n-------------Ended: Main--------------\n");}
+#line 1488 "bisonFile.tab.c"
     break;
 
   case 26: /* statement: scan varName EOL  */
-#line 192 "bisonFile.y"
+#line 199 "bisonFile.y"
                           {
             if (find((yyvsp[-1].txt)) != -1) {
                     printf("Waiting: User input in %s",(yyvsp[-1].txt));
@@ -1493,26 +1497,26 @@ yyreduce:
                 printf("line %d => Not exist: %s variable",yylineno,(yyvsp[-1].txt));
             }
         }
-#line 1497 "bisonFile.tab.c"
+#line 1501 "bisonFile.tab.c"
     break;
 
   case 30: /* statement: eval expr EOL  */
-#line 203 "bisonFile.y"
+#line 210 "bisonFile.y"
                         {printf("Evaluated result is : %f\n",(yyvsp[-1].numd));}
-#line 1503 "bisonFile.tab.c"
+#line 1507 "bisonFile.tab.c"
     break;
 
   case 32: /* statement: ifshuru '(' condition ')' '{' statements '}' ELSE '{' statements '}'  */
-#line 205 "bisonFile.y"
+#line 212 "bisonFile.y"
                                                                                {
                 ifcount++;
                 printf("Finished: %d.IF-ELSE - %s \n",ifcount,(yyvsp[-8].txt));
             }
-#line 1512 "bisonFile.tab.c"
+#line 1516 "bisonFile.tab.c"
     break;
 
   case 33: /* statement: LOOP '(' varName loopOP expr EOL changer expr ')' '{' statements '}'  */
-#line 209 "bisonFile.y"
+#line 216 "bisonFile.y"
                                                                                 {
                                 int i = find((yyvsp[-9].txt));
                                 int x;
@@ -1557,11 +1561,11 @@ yyreduce:
                                     }
                                 }
                             }
-#line 1561 "bisonFile.tab.c"
+#line 1565 "bisonFile.tab.c"
     break;
 
   case 34: /* statement: varName '(' ')' EOL  */
-#line 253 "bisonFile.y"
+#line 260 "bisonFile.y"
                               {
                         int i = find((yyvsp[-3].txt));
                         if(i!=-1 && symbolTable[i].intValue == 0 && !strcmp(symbolTable[i].type, "funcType")){
@@ -1571,11 +1575,11 @@ yyreduce:
                             printf("line %d => No Function Found for %s\n",yylineno,(yyvsp[-3].txt));
                         }                       
                     }
-#line 1575 "bisonFile.tab.c"
+#line 1579 "bisonFile.tab.c"
     break;
 
   case 35: /* statement: varName '(' callPar ')' EOL  */
-#line 262 "bisonFile.y"
+#line 269 "bisonFile.y"
                                       {
                         int i = find((yyvsp[-4].txt));
                         if(i!=-1 && !strcmp(symbolTable[i].type, "funcType")){
@@ -1592,11 +1596,11 @@ yyreduce:
 
                         funcVarCount = 0;                    
                     }
-#line 1596 "bisonFile.tab.c"
+#line 1600 "bisonFile.tab.c"
     break;
 
   case 36: /* statement: varName '=' concat '(' stringParameter ',' stringParameter ')' EOL  */
-#line 279 "bisonFile.y"
+#line 286 "bisonFile.y"
                                                                                  {
                     int i = find((yyvsp[-8].txt));
                     if(i==-1){
@@ -1615,11 +1619,11 @@ yyreduce:
                         }
                     }
                 }
-#line 1619 "bisonFile.tab.c"
+#line 1623 "bisonFile.tab.c"
     break;
 
   case 37: /* statement: varName '=' copy '(' stringParameter ')' EOL  */
-#line 297 "bisonFile.y"
+#line 304 "bisonFile.y"
                                                            {
                     int i = find((yyvsp[-6].txt));
                     if(i==-1){
@@ -1635,11 +1639,11 @@ yyreduce:
                         }
                     }
                 }
-#line 1639 "bisonFile.tab.c"
+#line 1643 "bisonFile.tab.c"
     break;
 
   case 38: /* statement: varName '=' compare '(' stringParameter ',' stringParameter ')' EOL  */
-#line 313 "bisonFile.y"
+#line 320 "bisonFile.y"
                                                                                   {
                     int i = find((yyvsp[-8].txt));
                     if(i==-1){
@@ -1661,11 +1665,11 @@ yyreduce:
                         }
                     }
                 }
-#line 1665 "bisonFile.tab.c"
+#line 1669 "bisonFile.tab.c"
     break;
 
   case 39: /* statement: varName '=' len '(' stringParameter ')' EOL  */
-#line 335 "bisonFile.y"
+#line 342 "bisonFile.y"
                                                            {
                 int i = find((yyvsp[-6].txt));
                 if(i==-1){
@@ -1681,11 +1685,11 @@ yyreduce:
                     }
                 }
             }
-#line 1685 "bisonFile.tab.c"
+#line 1689 "bisonFile.tab.c"
     break;
 
   case 40: /* statement: varName '=' FLOOR '(' numberParameter ')' EOL  */
-#line 351 "bisonFile.y"
+#line 358 "bisonFile.y"
                                                         {
                     int i = find((yyvsp[-6].txt));
                     if(i==-1){
@@ -1710,11 +1714,11 @@ yyreduce:
                         }
                     }
                 }
-#line 1714 "bisonFile.tab.c"
+#line 1718 "bisonFile.tab.c"
     break;
 
   case 41: /* statement: varName '=' CEIL '(' numberParameter ')' EOL  */
-#line 375 "bisonFile.y"
+#line 382 "bisonFile.y"
                                                        {
                 int i = find((yyvsp[-6].txt));
                 if(i==-1){
@@ -1739,11 +1743,11 @@ yyreduce:
                     }
                 }
             }
-#line 1743 "bisonFile.tab.c"
+#line 1747 "bisonFile.tab.c"
     break;
 
   case 42: /* statement: varName '=' SIN '(' numberParameter ')' EOL  */
-#line 399 "bisonFile.y"
+#line 406 "bisonFile.y"
                                                       {
             int i = find((yyvsp[-6].txt));
             if(i==-1){
@@ -1755,7 +1759,8 @@ yyreduce:
                     printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
                 }
                 else{
-                    result = sin((yyvsp[-2].numd));
+                    float ab = (yyvsp[-2].numd) * 3.1416/180;
+                    result = sin(ab);
                     if(!strcmp(symbolTable[i].type, "purno")){
                         symbolTable[i].intValue = (int) result;
                         printf("Sine: %0.2f  => %d\n",(yyvsp[-2].numd),symbolTable[i].intValue);
@@ -1768,11 +1773,11 @@ yyreduce:
                 }
             }
             }
-#line 1772 "bisonFile.tab.c"
+#line 1777 "bisonFile.tab.c"
     break;
 
   case 43: /* statement: varName '=' COS '(' numberParameter ')' EOL  */
-#line 424 "bisonFile.y"
+#line 432 "bisonFile.y"
                                                       {
             int i = find((yyvsp[-6].txt));
             if(i==-1){
@@ -1784,7 +1789,8 @@ yyreduce:
                     printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
                 }
                 else{
-                    result = cos((yyvsp[-2].numd));
+                    float ab = (yyvsp[-2].numd) * 3.1416/180;
+                    result = cos(ab);
                     if(!strcmp(symbolTable[i].type, "purno")){
                         symbolTable[i].intValue = (int) result;
                         printf("Cos: %0.2f  => %d\n",(yyvsp[-2].numd),symbolTable[i].intValue);
@@ -1797,11 +1803,11 @@ yyreduce:
                 }
             }
             }
-#line 1801 "bisonFile.tab.c"
+#line 1807 "bisonFile.tab.c"
     break;
 
   case 44: /* statement: varName '=' TAN '(' numberParameter ')' EOL  */
-#line 449 "bisonFile.y"
+#line 458 "bisonFile.y"
                                                       {
             int i = find((yyvsp[-6].txt));
             if(i==-1){
@@ -1813,7 +1819,8 @@ yyreduce:
                     printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
                 }
                 else{
-                    result = tan((yyvsp[-2].numd));
+                    float ab = (yyvsp[-2].numd) * 3.1416/180;
+                    result = tan(ab);
                     if(!strcmp(symbolTable[i].type, "purno")){
                         symbolTable[i].intValue = (int) result;
                         printf("Tan: %0.2f  => %d\n",(yyvsp[-2].numd),symbolTable[i].intValue);
@@ -1826,11 +1833,11 @@ yyreduce:
                 }
             }
             }
-#line 1830 "bisonFile.tab.c"
+#line 1837 "bisonFile.tab.c"
     break;
 
   case 45: /* statement: varName '=' LOG '(' numberParameter ')' EOL  */
-#line 474 "bisonFile.y"
+#line 484 "bisonFile.y"
                                                       {
             int i = find((yyvsp[-6].txt));
             if(i==-1){
@@ -1855,11 +1862,11 @@ yyreduce:
                 }
             }
             }
-#line 1859 "bisonFile.tab.c"
+#line 1866 "bisonFile.tab.c"
     break;
 
   case 46: /* statement: varName '=' LOG10 '(' numberParameter ')' EOL  */
-#line 499 "bisonFile.y"
+#line 509 "bisonFile.y"
                                                         {
             int i = find((yyvsp[-6].txt));
             if(i==-1){
@@ -1884,11 +1891,11 @@ yyreduce:
                 }
             }
             }
-#line 1888 "bisonFile.tab.c"
+#line 1895 "bisonFile.tab.c"
     break;
 
   case 47: /* statement: varName '=' POW '(' numberParameter ',' numberParameter ')' EOL  */
-#line 524 "bisonFile.y"
+#line 534 "bisonFile.y"
                                                                          {
                 int i = find((yyvsp[-8].txt));
                 if(i==-1){
@@ -1913,11 +1920,11 @@ yyreduce:
                     }
                 }
             }
-#line 1917 "bisonFile.tab.c"
+#line 1924 "bisonFile.tab.c"
     break;
 
   case 48: /* statement: varName '=' GCD '(' numberParameter ',' numberParameter ')' EOL  */
-#line 548 "bisonFile.y"
+#line 558 "bisonFile.y"
                                                                          {
             int i = find((yyvsp[-8].txt));
             if(i==-1){
@@ -1950,23 +1957,23 @@ yyreduce:
                 }
             }
         }
-#line 1954 "bisonFile.tab.c"
+#line 1961 "bisonFile.tab.c"
     break;
 
   case 49: /* numberParameter: number  */
-#line 581 "bisonFile.y"
+#line 591 "bisonFile.y"
                          {(yyval.numd) = (yyvsp[0].num)*1.0;}
-#line 1960 "bisonFile.tab.c"
+#line 1967 "bisonFile.tab.c"
     break;
 
   case 50: /* numberParameter: numberd  */
-#line 582 "bisonFile.y"
+#line 592 "bisonFile.y"
                           {(yyval.numd) = (yyvsp[0].numd);}
-#line 1966 "bisonFile.tab.c"
+#line 1973 "bisonFile.tab.c"
     break;
 
   case 51: /* numberParameter: varName  */
-#line 583 "bisonFile.y"
+#line 593 "bisonFile.y"
                             {
                     int i = find((yyvsp[0].txt));
                     if(i==-1){
@@ -1984,17 +1991,17 @@ yyreduce:
                         }
                     }
                 }
-#line 1988 "bisonFile.tab.c"
+#line 1995 "bisonFile.tab.c"
     break;
 
   case 52: /* stringParameter: qt varName qt  */
-#line 601 "bisonFile.y"
+#line 611 "bisonFile.y"
                                 {(yyval.txt) = (yyvsp[-1].txt);}
-#line 1994 "bisonFile.tab.c"
+#line 2001 "bisonFile.tab.c"
     break;
 
   case 53: /* stringParameter: varName  */
-#line 602 "bisonFile.y"
+#line 612 "bisonFile.y"
                             {
                     int i = find((yyvsp[0].txt));
                     if(i==-1){
@@ -2015,62 +2022,62 @@ yyreduce:
                         }
                     }
                 }
-#line 2019 "bisonFile.tab.c"
+#line 2026 "bisonFile.tab.c"
     break;
 
   case 56: /* oneCall: dataType varName  */
-#line 625 "bisonFile.y"
+#line 635 "bisonFile.y"
                            {
     funcVarCount++;
     }
-#line 2027 "bisonFile.tab.c"
+#line 2034 "bisonFile.tab.c"
     break;
 
   case 57: /* changer: INC  */
-#line 629 "bisonFile.y"
+#line 639 "bisonFile.y"
              {(yyval.txt) = "inc";}
-#line 2033 "bisonFile.tab.c"
+#line 2040 "bisonFile.tab.c"
     break;
 
   case 58: /* changer: DEC  */
-#line 630 "bisonFile.y"
+#line 640 "bisonFile.y"
              {(yyval.txt) = "dec";}
-#line 2039 "bisonFile.tab.c"
+#line 2046 "bisonFile.tab.c"
     break;
 
   case 59: /* loopOP: isLarge  */
-#line 632 "bisonFile.y"
+#line 642 "bisonFile.y"
                 {(yyval.txt) = ">";}
-#line 2045 "bisonFile.tab.c"
+#line 2052 "bisonFile.tab.c"
     break;
 
   case 60: /* loopOP: isLargeEqual  */
-#line 633 "bisonFile.y"
-                           {(yyval.txt) = ">=";}
-#line 2051 "bisonFile.tab.c"
+#line 643 "bisonFile.y"
+                   {(yyval.txt) = ">=";}
+#line 2058 "bisonFile.tab.c"
     break;
 
   case 61: /* loopOP: isSmaller  */
-#line 634 "bisonFile.y"
-                        {(yyval.txt) = "<";}
-#line 2057 "bisonFile.tab.c"
+#line 644 "bisonFile.y"
+                {(yyval.txt) = "<";}
+#line 2064 "bisonFile.tab.c"
     break;
 
   case 62: /* loopOP: isSmallerEqual  */
-#line 635 "bisonFile.y"
-                             {(yyval.txt) = "<=";}
-#line 2063 "bisonFile.tab.c"
+#line 645 "bisonFile.y"
+                     {(yyval.txt) = "<=";}
+#line 2070 "bisonFile.tab.c"
     break;
 
   case 63: /* ifshuru: IF  */
-#line 638 "bisonFile.y"
+#line 648 "bisonFile.y"
             {printf("Started: IF BLOCK\n");}
-#line 2069 "bisonFile.tab.c"
+#line 2076 "bisonFile.tab.c"
     break;
 
   case 64: /* condition: expr isEqual expr  */
-#line 639 "bisonFile.y"
-                              {
+#line 650 "bisonFile.y"
+    {
         if((yyvsp[-2].numd) == (yyvsp[0].numd)){
             (yyval.txt) = "true";  
         }
@@ -2078,11 +2085,11 @@ yyreduce:
             (yyval.txt) = "false";
         }
     }
-#line 2082 "bisonFile.tab.c"
+#line 2089 "bisonFile.tab.c"
     break;
 
   case 65: /* condition: expr isLarge expr  */
-#line 647 "bisonFile.y"
+#line 658 "bisonFile.y"
                         {
         if((yyvsp[-2].numd) > (yyvsp[0].numd)){
             (yyval.txt) = "true";  
@@ -2091,11 +2098,11 @@ yyreduce:
             (yyval.txt) = "false";
         }
     }
-#line 2095 "bisonFile.tab.c"
+#line 2102 "bisonFile.tab.c"
     break;
 
   case 66: /* condition: expr isLargeEqual expr  */
-#line 655 "bisonFile.y"
+#line 666 "bisonFile.y"
                              {
         if((yyvsp[-2].numd) >= (yyvsp[0].numd)){
             (yyval.txt) = "true";  
@@ -2104,11 +2111,11 @@ yyreduce:
             (yyval.txt) = "false";
         }
     }
-#line 2108 "bisonFile.tab.c"
+#line 2115 "bisonFile.tab.c"
     break;
 
   case 67: /* condition: expr isSmaller expr  */
-#line 663 "bisonFile.y"
+#line 674 "bisonFile.y"
                           {
         if((yyvsp[-2].numd) < (yyvsp[0].numd)){
             (yyval.txt) = "true";  
@@ -2117,11 +2124,11 @@ yyreduce:
             (yyval.txt) = "false";
         }
     }
-#line 2121 "bisonFile.tab.c"
+#line 2128 "bisonFile.tab.c"
     break;
 
   case 68: /* condition: expr isSmallerEqual expr  */
-#line 671 "bisonFile.y"
+#line 682 "bisonFile.y"
                                {
         if((yyvsp[-2].numd) <= (yyvsp[0].numd)){
             (yyval.txt) = "true";  
@@ -2130,11 +2137,11 @@ yyreduce:
             (yyval.txt) = "false";
         }
     }
-#line 2134 "bisonFile.tab.c"
+#line 2141 "bisonFile.tab.c"
     break;
 
   case 69: /* condition: expr isNotEqual expr  */
-#line 679 "bisonFile.y"
+#line 690 "bisonFile.y"
                            {
         if((yyvsp[-2].numd) != (yyvsp[0].numd)){
             (yyval.txt) = "true";  
@@ -2143,11 +2150,11 @@ yyreduce:
             (yyval.txt) = "false";
         }
     }
-#line 2147 "bisonFile.tab.c"
+#line 2154 "bisonFile.tab.c"
     break;
 
   case 70: /* condition: expr  */
-#line 687 "bisonFile.y"
+#line 698 "bisonFile.y"
           {
         if((yyvsp[0].numd)>0){
             (yyval.txt) = "true";
@@ -2156,13 +2163,13 @@ yyreduce:
             (yyval.txt) = "false";
         }
     }
-#line 2160 "bisonFile.tab.c"
+#line 2167 "bisonFile.tab.c"
     break;
 
   case 71: /* value: varName  */
-#line 698 "bisonFile.y"
-               {
-    int i = find((yyvsp[0].txt));
+#line 710 "bisonFile.y"
+    {
+            int i = find((yyvsp[0].txt));
             if(i!=-1){
                 if(!strcmp(symbolTable[i].type, "purno")){    
                     printf("SHOW: %s => %d\n",(yyvsp[0].txt),symbolTable[i].intValue);
@@ -2180,74 +2187,74 @@ yyreduce:
                 printf("line %d => Not Exist: Variable %s\n",yylineno,(yyvsp[0].txt));
             }
     }
-#line 2184 "bisonFile.tab.c"
+#line 2191 "bisonFile.tab.c"
     break;
 
   case 72: /* expr: val  */
-#line 718 "bisonFile.y"
+#line 730 "bisonFile.y"
           {(yyval.numd) = (yyvsp[0].numd);}
-#line 2190 "bisonFile.tab.c"
+#line 2197 "bisonFile.tab.c"
     break;
 
   case 73: /* expr: expr '+' expr  */
-#line 719 "bisonFile.y"
+#line 731 "bisonFile.y"
                     {(yyval.numd) = (yyvsp[-2].numd) + (yyvsp[0].numd);}
-#line 2196 "bisonFile.tab.c"
+#line 2203 "bisonFile.tab.c"
     break;
 
   case 74: /* expr: expr '-' expr  */
-#line 720 "bisonFile.y"
+#line 732 "bisonFile.y"
                     {(yyval.numd) = (yyvsp[-2].numd) - (yyvsp[0].numd);}
-#line 2202 "bisonFile.tab.c"
+#line 2209 "bisonFile.tab.c"
     break;
 
   case 75: /* expr: expr '*' expr  */
-#line 721 "bisonFile.y"
+#line 733 "bisonFile.y"
                     {(yyval.numd) = (yyvsp[-2].numd) * (yyvsp[0].numd);}
-#line 2208 "bisonFile.tab.c"
+#line 2215 "bisonFile.tab.c"
     break;
 
   case 76: /* expr: expr '/' expr  */
-#line 722 "bisonFile.y"
+#line 734 "bisonFile.y"
                     {(yyval.numd) = (yyvsp[-2].numd) / (yyvsp[0].numd);}
-#line 2214 "bisonFile.tab.c"
+#line 2221 "bisonFile.tab.c"
     break;
 
   case 77: /* expr: expr mod expr  */
-#line 723 "bisonFile.y"
-                    {
-        int val1 = (int)(yyvsp[-2].numd);
-        int val2 = (int)(yyvsp[0].numd);
-        float val3 = (val1%val2)*1.0;
-        (yyval.numd) = val3;
-    }
-#line 2225 "bisonFile.tab.c"
+#line 736 "bisonFile.y"
+        {
+            int val1 = (int)(yyvsp[-2].numd);
+            int val2 = (int)(yyvsp[0].numd);
+            float val3 = (val1%val2)*1.0;
+            (yyval.numd) = val3;
+        }
+#line 2232 "bisonFile.tab.c"
     break;
 
   case 78: /* val: number  */
-#line 730 "bisonFile.y"
+#line 743 "bisonFile.y"
             {(yyval.numd) = (yyvsp[0].num)*1.0;}
-#line 2231 "bisonFile.tab.c"
+#line 2238 "bisonFile.tab.c"
     break;
 
   case 79: /* val: numberd  */
-#line 731 "bisonFile.y"
+#line 744 "bisonFile.y"
               {(yyval.numd) = (yyvsp[0].numd);}
-#line 2237 "bisonFile.tab.c"
+#line 2244 "bisonFile.tab.c"
     break;
 
   case 80: /* val: qt varName qt  */
-#line 732 "bisonFile.y"
-                    {
+#line 746 "bisonFile.y"
+        {
                 printf("line %d => Not a number: %s => shobdo\n",yylineno, (yyvsp[-1].txt));
                 (yyval.numd) = 0.0;
             }
-#line 2246 "bisonFile.tab.c"
+#line 2253 "bisonFile.tab.c"
     break;
 
   case 81: /* val: varName  */
-#line 736 "bisonFile.y"
-              {
+#line 751 "bisonFile.y"
+        {
             int i = find((yyvsp[0].txt));
             if(i!=-1){
                 if(!strcmp(symbolTable[i].type, "purno")){    
@@ -2265,30 +2272,30 @@ yyreduce:
                 printf("line %d => Not Declared: Variable %s\n",yylineno,(yyvsp[0].txt));
             }
         }
-#line 2269 "bisonFile.tab.c"
+#line 2276 "bisonFile.tab.c"
     break;
 
   case 83: /* dataType: purno  */
-#line 758 "bisonFile.y"
+#line 773 "bisonFile.y"
                  {isPurno = 1; (yyval.txt) = "purno";}
-#line 2275 "bisonFile.tab.c"
+#line 2282 "bisonFile.tab.c"
     break;
 
   case 84: /* dataType: vogno  */
-#line 759 "bisonFile.y"
+#line 774 "bisonFile.y"
                 {isPurno = 0;(yyval.txt) = "vogno";}
-#line 2281 "bisonFile.tab.c"
+#line 2288 "bisonFile.tab.c"
     break;
 
   case 85: /* dataType: shobdo  */
-#line 760 "bisonFile.y"
+#line 775 "bisonFile.y"
                  {isPurno = -1;(yyval.txt) = "shobdo";}
-#line 2287 "bisonFile.tab.c"
+#line 2294 "bisonFile.tab.c"
     break;
 
   case 88: /* oneVar: varName  */
-#line 765 "bisonFile.y"
-                {
+#line 781 "bisonFile.y"
+        {
             if (find((yyvsp[0].txt)) != -1) {
                     printf("line %d => Already declared: Variable %s \n",yylineno, (yyvsp[0].txt));
             } 
@@ -2307,11 +2314,11 @@ yyreduce:
                 }
             }
         }
-#line 2311 "bisonFile.tab.c"
+#line 2318 "bisonFile.tab.c"
     break;
 
   case 89: /* oneVar: varName '=' number  */
-#line 785 "bisonFile.y"
+#line 801 "bisonFile.y"
                              {
                     if (find((yyvsp[-2].txt)) != -1) {
                         printf("line %d => Already declared: Variable %s \n",yylineno, (yyvsp[-2].txt));
@@ -2329,11 +2336,11 @@ yyreduce:
                         }
                     }
                 }
-#line 2333 "bisonFile.tab.c"
+#line 2340 "bisonFile.tab.c"
     break;
 
   case 90: /* oneVar: varName '=' numberd  */
-#line 802 "bisonFile.y"
+#line 818 "bisonFile.y"
                               {
                     if (find((yyvsp[-2].txt)) != -1) {
                         printf("line %d => Already declared: Variable %s \n",yylineno, (yyvsp[-2].txt));
@@ -2351,11 +2358,11 @@ yyreduce:
                         }
                     }
             }
-#line 2355 "bisonFile.tab.c"
+#line 2362 "bisonFile.tab.c"
     break;
 
   case 91: /* oneVar: varName '=' qt varName qt  */
-#line 820 "bisonFile.y"
+#line 836 "bisonFile.y"
                                     {
                     if (find((yyvsp[-4].txt)) != -1) {
                         printf("line %d => Already declared: Variable %s \n",yylineno, (yyvsp[-4].txt));
@@ -2373,12 +2380,12 @@ yyreduce:
                         }
                     }
         }
-#line 2377 "bisonFile.tab.c"
+#line 2384 "bisonFile.tab.c"
     break;
 
   case 92: /* variableValueAssign: varName '=' number EOL  */
-#line 838 "bisonFile.y"
-                                             {
+#line 855 "bisonFile.y"
+                        {
                                         int i = find((yyvsp[-3].txt));
                                         if(i!=-1){
                                             if(!strcmp(symbolTable[i].type, "purno")){
@@ -2393,11 +2400,11 @@ yyreduce:
                                             printf("line %d => Not Declared : variable %s\n",yylineno,(yyvsp[-3].txt));
                                         }
                                     }
-#line 2397 "bisonFile.tab.c"
+#line 2404 "bisonFile.tab.c"
     break;
 
   case 93: /* variableValueAssign: varName '=' numberd EOL  */
-#line 853 "bisonFile.y"
+#line 870 "bisonFile.y"
                                              {
                                         int i = find((yyvsp[-3].txt));
                                         if(i!=-1){
@@ -2413,11 +2420,11 @@ yyreduce:
                                             printf("line %d => Not Declared : variable %s\n",yylineno,(yyvsp[-3].txt));
                                         }
                                     }
-#line 2417 "bisonFile.tab.c"
+#line 2424 "bisonFile.tab.c"
     break;
 
   case 94: /* variableValueAssign: varName '=' expr EOL  */
-#line 869 "bisonFile.y"
+#line 886 "bisonFile.y"
                                           {
                                         int i = find((yyvsp[-3].txt));
                                         if(i!=-1){
@@ -2435,11 +2442,11 @@ yyreduce:
                                             printf("line %d => Not Declared : variable %s\n",yylineno,(yyvsp[-3].txt));
                                         }
                                     }
-#line 2439 "bisonFile.tab.c"
+#line 2446 "bisonFile.tab.c"
     break;
 
   case 95: /* variableValueAssign: varName '=' qt varName qt EOL  */
-#line 887 "bisonFile.y"
+#line 904 "bisonFile.y"
                                                   {
                                     int i = find((yyvsp[-5].txt));
                                     if(i!=-1){
@@ -2456,11 +2463,11 @@ yyreduce:
                                         printf("line %d => Not Declared : variable %s\n",yylineno,(yyvsp[-5].txt));
                                     }
                     }
-#line 2460 "bisonFile.tab.c"
+#line 2467 "bisonFile.tab.c"
     break;
 
 
-#line 2464 "bisonFile.tab.c"
+#line 2471 "bisonFile.tab.c"
 
       default: break;
     }
@@ -2653,7 +2660,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 904 "bisonFile.y"
+#line 921 "bisonFile.y"
 
 
 int yyerror(char *s) {

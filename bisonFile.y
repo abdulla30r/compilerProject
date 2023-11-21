@@ -1,4 +1,3 @@
-
 %{
 #include<stdio.h>
 #include <string.h>
@@ -178,12 +177,19 @@ headers: header headers
         | header 
         | header cmnt
 
-header: headerStart headerName {printf("Included: %s\n",$2);}
+header: headerStart headerName 
+{
+   
+    printf("Included: %s\n",$2);}
 
 program:start statements end
 
-start : shuru {printf("\n-------------Started: Main--------------\n\n");}
-end : sesh {printf("\n-------------Ended: Main--------------\n");}
+start : shuru 
+{
+    printf("\n-------------Started: Main--------------\n\n");}
+end : sesh 
+{
+    printf("\n-------------Ended: Main--------------\n");}
 
 statements : statement statements
         | statement
@@ -407,7 +413,8 @@ statement:
                     printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
                 }
                 else{
-                    result = sin($5);
+                    float ab = $5 * 3.1416/180;
+                    result = sin(ab);
                     if(!strcmp(symbolTable[i].type, "purno")){
                         symbolTable[i].intValue = (int) result;
                         printf("Sine: %0.2f  => %d\n",$5,symbolTable[i].intValue);
@@ -432,7 +439,8 @@ statement:
                     printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
                 }
                 else{
-                    result = cos($5);
+                    float ab = $5 * 3.1416/180;
+                    result = cos(ab);
                     if(!strcmp(symbolTable[i].type, "purno")){
                         symbolTable[i].intValue = (int) result;
                         printf("Cos: %0.2f  => %d\n",$5,symbolTable[i].intValue);
@@ -457,7 +465,8 @@ statement:
                     printf("line %d => Mismatch: %s , type: Shobdo.\n",yylineno,symbolTable[i].name);
                 }
                 else{
-                    result = tan($5);
+                    float ab = $5 * 3.1416/180;
+                    result = tan(ab);
                     if(!strcmp(symbolTable[i].type, "purno")){
                         symbolTable[i].intValue = (int) result;
                         printf("Tan: %0.2f  => %d\n",$5,symbolTable[i].intValue);
@@ -630,13 +639,14 @@ changer: INC {$$ = "inc";}
         |DEC {$$ = "dec";}
 
 loopOP: isLarge {$$ = ">";}
-            | isLargeEqual {$$ = ">=";}
-            | isSmaller {$$ = "<";}
-            | isSmallerEqual {$$ = "<=";}
+    | isLargeEqual {$$ = ">=";}
+    | isSmaller {$$ = "<";}
+    | isSmallerEqual {$$ = "<=";}
 
 
 ifshuru: IF {printf("Started: IF BLOCK\n");}
-condition : expr isEqual expr {
+condition : expr isEqual expr 
+    {
         if($1 == $3){
             $$ = "true";  
         }
@@ -695,8 +705,9 @@ condition : expr isEqual expr {
 
 
 
-value: varName {
-    int i = find($1);
+value: varName 
+    {
+            int i = find($1);
             if(i!=-1){
                 if(!strcmp(symbolTable[i].type, "purno")){    
                     printf("SHOW: %s => %d\n",$1,symbolTable[i].intValue);
@@ -720,20 +731,23 @@ expr: val {$$ = $1;}
     | expr '-' expr {$$ = $1 - $3;}
     | expr '*' expr {$$ = $1 * $3;}
     | expr '/' expr {$$ = $1 / $3;}
-    | expr mod expr {
-        int val1 = (int)$1;
-        int val2 = (int)$3;
-        float val3 = (val1%val2)*1.0;
-        $$ = val3;
-    }
+    | expr mod expr 
+        {
+            int val1 = (int)$1;
+            int val2 = (int)$3;
+            float val3 = (val1%val2)*1.0;
+            $$ = val3;
+        }
 
 val: number {$$ = $1*1.0;}
     | numberd {$$ = $1;}
-    | qt varName qt {
+    | qt varName qt 
+        {
                 printf("line %d => Not a number: %s => shobdo\n",yylineno, $2);
                 $$ = 0.0;
             }
-    | varName {
+    | varName 
+        {
             int i = find($1);
             if(i!=-1){
                 if(!strcmp(symbolTable[i].type, "purno")){    
@@ -762,7 +776,8 @@ dataType : purno {isPurno = 1; $$ = "purno";}
 varNames: oneVar ',' varNames
         |oneVar EOL
 
-oneVar: varName {
+oneVar: varName 
+        {
             if (find($1) != -1) {
                     printf("line %d => Already declared: Variable %s \n",yylineno, $1);
             } 
@@ -835,7 +850,8 @@ oneVar: varName {
                     }
         }
 
-variableValueAssign : varName '=' number EOL {
+variableValueAssign : varName '=' number EOL 
+                        {
                                         int i = find($1);
                                         if(i!=-1){
                                             if(!strcmp(symbolTable[i].type, "purno")){

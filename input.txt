@@ -52,5 +52,8 @@ shuru
 	d = tan(45);
 	purno k;
 	k = gcd(5,10);
+	d = sin(30);
+	d = cos(30);
+	d = tan(45);
 
 sesh
